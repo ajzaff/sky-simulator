@@ -1,0 +1,26 @@
+# scene metadata
+scene.width 1024
+scene.height    768
+scene.output    test.png
+
+# camera location
+camera.at  0 0 0
+camera.up   0 1 0
+camera.eye  1 0 1
+camera.fov  30.0
+
+# sky features
+sky.color   0 .7 .93
+#.1 .2 .6
+sky.center  0 -200 0
+sky.radius  201
+
+# terrain features
+terrain.color .6 .4 .3
+terrain.center  0 -200 0
+terrain.radius  199
+
+# sun features
+sun.color 1 1 1
+sun.center  4 0 4
+sun.radius  3.5
