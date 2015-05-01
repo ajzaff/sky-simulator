@@ -63,13 +63,10 @@ public class SceneParser {
       offset += PROPERTY_SUN_COLOR.length();
       scene.sun.color = consumeColor(line);
     }
-    else if(line.startsWith(PROPERTY_SUN_CENTER)) {
-      offset += PROPERTY_SUN_CENTER.length();
-      scene.sun.center = consumeVector(line);
-    }
-    else if(line.startsWith(PROPERTY_SUN_RADIUS)) {
-      offset += PROPERTY_SUN_RADIUS.length();
-      scene.sun.radius = consumeFloat(line);
+    else if(line.startsWith(PROPERTY_SUN_DIRECTION)) {
+      offset += PROPERTY_SUN_DIRECTION.length();
+      scene.sun.d = consumeVector(line);
+      scene.sun.d.normalize();
     }
     else if(line.startsWith(PROPERTY_TERRAIN_COLOR)) {
       offset += PROPERTY_TERRAIN_COLOR.length();

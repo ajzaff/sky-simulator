@@ -9,18 +9,17 @@ import javax.vecmath.Color3f;
 
 public class RayTracer {
 
-  private Scene scene;
+  public static final RayTracer r = new RayTracer();
+
+  public Scene scene;
 
   public static void main(String[] args) {
     if (args.length == 1) {
-      new RayTracer(args[0]).startTracing();
+      r.scene = new SceneReader(args[0]).readScene();
+      r.startTracing();
     } else {
       System.out.println("Usage: java RayTracer input.scene");
     }
-  }
-
-  RayTracer(String sceneFile) {
-    scene = new SceneReader(sceneFile).readScene();
   }
 
   public void startTracing() {
@@ -45,16 +44,16 @@ public class RayTracer {
   }
 
   private Color3f trace(Ray ray) {
+    /*float d2 = -ray.d.dot(scene.sun.d);
+    d2=(float)Math.pow(d2,14);
+    return new Color3f(d2,d2,d2);*/
     HitRecord hit = scene.intersectScene(ray);
     if(hit == null) return new Color3f();
     else if(hit.type == HitRecord.HitType.TYPE_SKY) {
       return scene.sky.calculateShading(ray, hit);
     }
-    else if(hit.type == HitRecord.HitType.TYPE_TERRAIN) {
+    else {
       return scene.terrain.color;
-    }
-    else /* SUN */ {
-      return new Color3f(1,1,1);
     }
   }
 }
