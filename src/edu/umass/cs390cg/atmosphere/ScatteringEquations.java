@@ -1,5 +1,7 @@
 package edu.umass.cs390cg.atmosphere;
-import javax.vecmath.Vector3f;
+import javax.vecmath.*;
+
+import edu.umass.cs390cg.atmosphere.geom.Ray;
 
 public class ScatteringEquations {
 	
@@ -52,6 +54,10 @@ public class ScatteringEquations {
 	 */
 	public float InScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
 		return 0f;
+	}
+	
+	public Color3f GetInScatterColor(Ray ray){
+		
 	}
 	
 	// 
