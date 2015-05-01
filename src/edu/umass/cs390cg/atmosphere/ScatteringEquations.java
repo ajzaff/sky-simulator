@@ -13,7 +13,8 @@ public class ScatteringEquations {
 	 * @return
 	 */
 	public float PhaseFunction(float theta, float g){
-		return 1f;
+		return (float) ((3*(1-g*g)  * (1+Math.pow(Math.cos(theta), 2))) /
+				    ((2*(2 + g*g)) * Math.pow((1 + g*g -2*g*Math.cos(theta)), 1.5)));
 	}
 	
 	/**
@@ -42,8 +43,17 @@ public class ScatteringEquations {
 		return 0f;
 	}
 	
+	/**
+	 * This calculates how much light is added to a ray through scattering
+	 * @param P_A
+	 * @param P_B
+	 * @param wavelength
+	 * @return
+	 */
 	public float InScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
 		return 0f;
 	}
+	
+	// 
 	
 }
