@@ -26,6 +26,7 @@ public class Scene {
     HitRecord r, best = null;
     float tMin = Float.MAX_VALUE;
 
+    // If there is a terrain intersection there is no need to check for sky collision
     r=intersectSky(ray);
     if(r != null && r.t < tMin) {
       best = r;

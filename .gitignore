@@ -1,28 +1,16 @@
-*target*
-*.jar
-*.war
-*.ear
-*.class
-
-# eclipse specific git ignore
-*.pydevproject
-.project
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-local.properties
+# Eclipse
 .classpath
+.project
 .settings/
-.loadpath
 
-# External tool builders
-.externalToolBuilders/
+# Intellij
+.idea/
+*.iml
+*.iws
 
-# Locally stored "Eclipse launch configurations"
-*.launch
-/bin/
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
