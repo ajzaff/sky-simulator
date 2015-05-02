@@ -1,10 +1,13 @@
 package edu.umass.cs390cg.atmosphere;
-import javax.vecmath.*;
+import javax.vecmath.Vector3f;
 
-import edu.umass.cs390cg.atmosphere.geom.Ray;
+import static java.lang.Math.*;
 
 public class ScatteringEquations {
-	
+
+	public static final float Mie_G = -.8f;
+	public static final float Step  = .1f;
+
 	/**
 	 * This calculates how much light is scattered in the 
 	 * direction of the camera
@@ -14,9 +17,28 @@ public class ScatteringEquations {
 	 * and -.999 < g < -.75 results in Mie aerosol scattering
 	 * @return
 	 */
-	public float PhaseFunction(float theta, float g){
-		return (float) ((3*(1-g*g)  * (1+Math.pow(Math.cos(theta), 2))) /
-				    ((2*(2 + g*g)) * Math.pow((1 + g*g -2*g*Math.cos(theta)), 1.5)));
+	public static float MiePhaseFunction(float theta, float g) {
+		float cos_theta, gg;
+
+		cos_theta = (float) cos(theta);
+		gg = g*g;
+
+		return (3*(1-gg))/(2*(2+gg)) *
+				(1+cos_theta*cos_theta)/
+				(float)Math.pow(1+gg-2*g*cos_theta,3f/2);
+	}
+
+	/**
+	 * This calculates how much light is scattered in the
+	 * direction of the camera
+	 * @param theta is the angle between two rays
+	 * @param g affects the symmetry of scattering
+	 * where g=0 results in symmetrical Rayleigh scattering
+	 * and -.999 < g < -.75 results in Mie aerosol scattering
+	 * @return
+	 */
+	public static float RayleighPhaseFunction(float cosTheta) {
+		return (float)(3f/4 * (1 + cos(theta)));
 	}
 	
 	/**
@@ -27,7 +49,7 @@ public class ScatteringEquations {
 	 * @param wavelength The wavelength of light you are calculating for
 	 * @return
 	 */
-	public float RayleighOutScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
+	public static float RayleighOutScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
 		
 		return 0f;
 	}
@@ -40,7 +62,7 @@ public class ScatteringEquations {
 	 * @param wavelength The wavelength of light you are calculating for
 	 * @return
 	 */
-	public float MieOutScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
+	public static float MieOutScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
 		
 		return 0f;
 	}
@@ -52,14 +74,10 @@ public class ScatteringEquations {
 	 * @param wavelength
 	 * @return
 	 */
-	public float InScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
+	public static float InScatterAmount(Vector3f P_A, Vector3f P_B, float wavelength){
 		return 0f;
 	}
-	
-	public Color3f GetInScatterColor(Ray ray){
-		
-	}
-	
-	// 
+
+	//
 	
 }

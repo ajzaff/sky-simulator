@@ -3,9 +3,8 @@ package edu.umass.cs390cg.atmosphere.scene;
 import edu.umass.cs390cg.atmosphere.Camera;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
-import edu.umass.cs390cg.atmosphere.geom.shapes.Shape;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
-import edu.umass.cs390cg.atmosphere.geom.shapes.Sun;
+import edu.umass.cs390cg.atmosphere.geom.Sun;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 
 import javax.imageio.ImageIO;
@@ -38,23 +37,9 @@ public class Scene {
     if (r != null && r.t < tMin) {
       best = r;
       best.type = HitRecord.HitType.TYPE_TERRAIN;
-      tMin = r.t;
-    }
-
-    r=intersectSun(ray);
-    if(r != null && /*&&*/ r.t < tMin)
-     // (best == null ||
-     //   best.type != HitRecord.HitType.TYPE_TERRAIN))
-    {
-      best = r;
-      best.type = HitRecord.HitType.TYPE_SUN;
     }
 
     return best;
-  }
-
-  HitRecord intersectSun(Ray ray) {
-    return sun.hit(ray, .001f, 0xffffff);
   }
 
   HitRecord intersectSky(Ray ray) {

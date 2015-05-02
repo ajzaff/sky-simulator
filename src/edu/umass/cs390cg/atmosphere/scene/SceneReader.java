@@ -12,14 +12,15 @@ public class SceneReader {
   private Scanner sc = null;
 
   public SceneReader(String sceneFile) {
-    File file = null;
+    File file;
+
     try {
       file = new File(sceneFile);
       sc = new Scanner(file);
     }
     catch (IOException e) {
       e.printStackTrace();
-      return;
+      System.exit(1);
     }
   }
 
