@@ -19,8 +19,10 @@ public class Sky extends Sphere {
 
     float v;
 
-    float fCos = r.scene.sun.d.dot(ray.d) / ray.d.length();
-    v = PhaseFunction(fCos, Mie_G);
+    //float fCos = r.scene.sun.d.dot(ray.d) / ray.d.length();
+    Vector3f negD = new Vector3f(ray.d); negD.negate();
+    float c       = r.scene.sun.d.angle(negD);
+    v = PhaseFunction(r.scene.sun.d.dot(negD), Mie_G);
 
     return new Color3f(v,v,v);
   }
