@@ -1,23 +1,15 @@
 //region
 package edu.umass.cs390cg.atmosphere;
 
-import com.sun.scenario.effect.impl.prism.ps.PPSBlend_COLOR_BURNPeer;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
-import edu.umass.cs390cg.atmosphere.numerics.Function;
-import edu.umass.cs390cg.atmosphere.numerics.Integrals;
 
-import javax.vecmath.Color3f;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3d;
 
-import java.util.Vector;
-
-import static edu.umass.cs390cg.atmosphere.RayTracer.r;
-import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
-import static java.lang.Math.*;
+import static edu.umass.cs390cg.atmosphere.numerics.Vec.Subtract;
+import static java.lang.Math.exp;
 
 public class ScatteringEquations {
 
