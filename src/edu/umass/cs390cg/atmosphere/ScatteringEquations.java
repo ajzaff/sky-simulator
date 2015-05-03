@@ -62,13 +62,18 @@ public class ScatteringEquations {
         double cameraHeight = height(startPoint);
         double cameraDepth = exp(scaleOverScaleDepth * (terrain.radius - cameraHeight));
 
-        double startAngle = ray.d.dot(startPoint)/cameraHeight;
+        double startAngle = ray.d.dot(startPoint) / cameraHeight;
         double startOffset = cameraDepth * scale(startAngle);
 
         double sampleLength = rayLength / samplesPerInScatterRay;
-        double scaledLength =  sampleLength * scale;
+        double scaledLength = sampleLength * scale;
 
-        Vector3d RaySegment = ray.d
+        Vector3d RaySegment = Scale(ray.d, sampleLength);
+        Vector3d SamplePoint = Add(startPoint, Scale(RaySegment, 0.5d));
+
+
+        Vector3d myColor = new Vector3d();
+
     }
 
     public static double OpticalDepth(Vector3d A, Vector3d B) {
