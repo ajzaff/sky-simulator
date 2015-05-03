@@ -19,13 +19,8 @@ public class Sky extends Sphere {
   public Color3f color;
 
   public Color3f calculateShading(Ray ray, HitRecord hit) {
-    /*
 
-    return new Color3f(v,v,v);*/
-    ScatteringEquations.InScatterAmount(ray, hit);
-    //System.out.println(depth);
-    return new Color3f(depth, 0f,0f);
-    //return new Color3f(0.7f, 0.5f, 0f);
+    return ScatteringEquations.InScatterAmount(ray, hit);
 
   }
 }

@@ -59,14 +59,21 @@ public class Vec {
     // endregion
 
     //region Color functions
-    public Color3f Multiply(Color3f a, Color3f b) {
+    public static Color3f Multiply(Color3f a, Color3f b) {
         return new Color3f(
                 a.x * b.x,
                 a.y * b.y,
                 a.z * b.z);
     }
 
-    public Color3f AddColors(Color3f a, Color3f b) {
+    public static Color3f Scale(Color3f a, float scale){
+        return new Color3f(
+                a.x * scale,
+                a.y * scale,
+                a.z * scale);
+    }
+
+    public static Color3f AddColors(Color3f a, Color3f b) {
         return new Color3f(
                 a.x + b.x,
                 a.y + b.y,

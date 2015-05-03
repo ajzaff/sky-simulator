@@ -1,14 +1,17 @@
 //region
 package edu.umass.cs390cg.atmosphere;
 
+import com.sun.scenario.effect.impl.prism.ps.PPSBlend_COLOR_BURNPeer;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 import edu.umass.cs390cg.atmosphere.numerics.Function;
 import edu.umass.cs390cg.atmosphere.numerics.Integrals;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
+
 import static edu.umass.cs390cg.atmosphere.RayTracer.r;
 import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
 import static java.lang.Math.*;
@@ -36,6 +39,7 @@ public class ScatteringEquations {
     //endregion
 
     //region K(wavelength)
+
     /**
      * The scattering constant function for a given wavelength.
      *
@@ -61,6 +65,7 @@ public class ScatteringEquations {
     //endregion
 
     //region Phase (theta, g)
+
     /**
      * This calculates how much light is scattered in the
      * direction of the camera
@@ -73,6 +78,7 @@ public class ScatteringEquations {
     public static float RayleighPhaseFunction(float theta) {
         return (float) (3f / 4 * (1 + cos(theta)));
     }
+
     /**
      * This calculates how much light is scattered in the
      * direction of the camera
@@ -96,6 +102,7 @@ public class ScatteringEquations {
     //endregion
 
     //region Outscatter from P1 to P2 with wavelength
+
     /**
      * Given two points in the air, this calculates how much light along that segment
      * gets scattered away
@@ -128,55 +135,7 @@ public class ScatteringEquations {
     }
     //endregion
 
-
-    //endregion
-
-    //region Mie Functions
-
-
-    private static float MieInScatter(Vector3f A, Vector3f B, float wavelength) {
-        return KMie * Integrals.estimateIntegral(
-                new Function() {
-                    @Override
-                    public float evaluate(Object[] args) {
-                        // Point n along the camera vector
-                        Vector3f P_n = (Vector3f) args[0];
-
-                        // The camera position
-                        Vector3f camera = (Vector3f) args[1];
-
-                        // Ray from a point along the ray to the sun
-                        Ray sunRay = new Ray(P_n, r.scene.sun.d);
-                        Vector3f sun = r.scene.intersectSky(sunRay).pos;
-
-                        float opticalDepth = (float)exp(-height(P_n) * scaleOverScaleDepth);                         exp(
-                    }
-                },
-                A, B, samplesPerInScatterRay
-        );
-    }
-
-
-
-
-
-
-
-
-    /**
-     * Gets the altitude of a point in the atmosphere.
-     *
-     * @param pos a point in the atmosphere.
-     * @return the altutide of this point [0,1) iif
-     * the point is contained within the atmosphere.
-     */
-    public static float height(Vector3f pos) {
-        return Subtract(pos, terrain.center).length() - terrain.radius;
-    }
-
-
-
-    //endregion
+    //region InScatter (Ray, hit)
 
     /**
      * This calculates how much light is added to a ray through scattering
@@ -188,23 +147,72 @@ public class ScatteringEquations {
     public static Color3f InScatterAmount(Ray ray, HitRecord hit) {
         Vector3f A = ray.o;
         Vector3f B = hit.pos;
-        float angle = 10f;// change this;
+        float angle = (float) acos(A.dot(B) / (A.length() * B.length()));
 
         Color3f MieColor = new Color3f(
-                MieInScatter(A, B, Wavelength.x),
-                MieInScatter(A, B, Wavelength.y),
-                MieInScatter(A, B, Wavelength.z));
+                MieInScatter(A, B, Wavelength.x, angle),
+                MieInScatter(A, B, Wavelength.y, angle),
+                MieInScatter(A, B, Wavelength.z, angle));
 
         Color3f RayleighColor = new Color3f(
-                RayleighInScatter(A, B, Wavelength.x),
-                RayleighInScatter(A, B, Wavelength.y),
-                RayleighInScatter(A, B, Wavelength.z));
+                RayleighInScatter(A, B, Wavelength.x, angle),
+                RayleighInScatter(A, B, Wavelength.y, angle),
+                RayleighInScatter(A, B, Wavelength.z, angle));
 
-        AddColors(MieColor, RayleighColor);
-        )
-
+        return Multiply(
+                AddColors(MieColor, RayleighColor),
+                r.scene.sun.color);
 
     }
+
+    private static float MieInScatter(Vector3f A, Vector3f B, float wavelength, float theta) {
+        return MiePhaseFunction(theta, Mie_G) * KMie * Integrals.estimateIntegral(
+                new Function() {
+                    @Override
+                    public float evaluate(Object[] args) {
+                        // Point n along the camera vector
+                        Vector3f P_n = (Vector3f) args[0];
+
+                        // The camera position
+                        Vector3f camera = r.scene.camera.center;
+
+                        // Ray from a point along the ray to the sun
+                        Ray sunRay = new Ray(P_n, r.scene.sun.d);
+                        Vector3f sun = r.scene.intersectSky(sunRay).pos;
+
+                        float opticalDepth = (float) exp(-height(P_n) * scaleOverScaleDepth);
+                        float outScatter = (float)exp(-OpticalDepth(P_n, sun) -OpticalDepth(P_n, camera));
+                        return opticalDepth * outScatter;
+                    }
+                },
+                A, B, samplesPerInScatterRay
+        );
+    }
+
+    private static float RayleighInScatter(Vector3f A, Vector3f B, float wavelength, float theta) {
+        return RayleighPhaseFunction(theta) * KRayleigh(wavelength) * Integrals.estimateIntegral(
+                new Function() {
+                    @Override
+                    public float evaluate(Object[] args) {
+                        // Point n along the camera vector
+                        Vector3f P_n = (Vector3f) args[0];
+
+                        // The camera position
+                        Vector3f camera = r.scene.camera.center;
+
+                        // Ray from a point along the ray to the sun
+                        Ray sunRay = new Ray(P_n, r.scene.sun.d);
+                        Vector3f sun = r.scene.intersectSky(sunRay).pos;
+
+                        float opticalDepth = (float) exp(-height(P_n) * scaleOverScaleDepth);
+                        float outScatter = (float)exp(-OpticalDepth(P_n, sun) -OpticalDepth(P_n, camera));
+                        return opticalDepth * outScatter;
+                    }
+                },
+                A, B, samplesPerInScatterRay
+        );
+    }
+    //endregion
 
     private static float OpticalDepth(Vector3f A, Vector3f B) {
         return Integrals.estimateIntegral(
@@ -221,9 +229,14 @@ public class ScatteringEquations {
     }
 
 
-
-
-
-    //
-
+    /**
+     * Gets the altitude of a point in the atmosphere.
+     *
+     * @param pos a point in the atmosphere.
+     * @return the altutide of this point [0,1) iif
+     * the point is contained within the atmosphere.
+     */
+    public static float height(Vector3f pos) {
+        return Subtract(pos, terrain.center).length() - terrain.radius;
+    }
 }

@@ -21,3 +21,4 @@ terrain.radius  200
 
 # sun features
 sun.direction 1 -1 1
+sun.color  15. 15. 15.
