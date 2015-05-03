@@ -2,17 +2,8 @@ package edu.umass.cs390cg.atmosphere;
 
 import edu.umass.cs390cg.atmosphere.numerics.Vec;
 
-import javax.vecmath.Color3f;
-
-import java.util.*;
-import java.awt.*;
-import java.awt.image.*;
-
-import javax.imageio.*;
 import javax.vecmath.Vector3d;
-
-
-import java.io.*;
+import java.util.Random;
 
 public class PixelThread implements Runnable{
 	static Vector3d[][] dest;

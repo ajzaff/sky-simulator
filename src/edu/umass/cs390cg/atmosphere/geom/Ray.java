@@ -13,6 +13,7 @@ public class Ray {
   public Ray(Ray ray) {
     this.o = new Vector3d(ray.o);
     this.d = new Vector3d(ray.d);
+    this.d.normalize();
   }
 
   public Ray(Vector3d o, Vector3d d) {

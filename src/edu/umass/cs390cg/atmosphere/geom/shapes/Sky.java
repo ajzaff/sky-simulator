@@ -1,14 +1,13 @@
 package edu.umass.cs390cg.atmosphere.geom.shapes;
 
-import edu.umass.cs390cg.atmosphere.RayTracer;
-import edu.umass.cs390cg.atmosphere.ScatteringEquations;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
-import edu.umass.cs390cg.atmosphere.numerics.Vec;
 
-import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
+<<<<<<< HEAD
 import java.util.Vector;
+=======
+>>>>>>> 28dcd4e78fdc0a4ee5083fab2189ba283146fb3c
 
 
 public class Sky extends Sphere {

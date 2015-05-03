@@ -1,16 +1,6 @@
 package edu.umass.cs390cg.atmosphere.numerics;
 
-import javax.vecmath.*;
-
-import edu.umass.cs390cg.atmosphere.geom.Ray;
-
-import java.util.*;
-import java.awt.*;
-import java.awt.image.*;
-
-import javax.imageio.*;
-
-import java.io.*;
+import javax.vecmath.Vector3d;
 
 public class Vec {
 

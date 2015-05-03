@@ -3,8 +3,8 @@ package edu.umass.cs390cg.atmosphere.scene;
 import edu.umass.cs390cg.atmosphere.Camera;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
-import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.Sun;
+import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 
 import javax.imageio.ImageIO;
