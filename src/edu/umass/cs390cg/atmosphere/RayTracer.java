@@ -53,6 +53,7 @@ public class RayTracer {
       return scene.sky.calculateShading(ray, hit);
     }
     else {
+      //return new Color3f();
       return scene.terrain.color;
     }
   }

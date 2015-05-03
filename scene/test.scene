@@ -12,7 +12,7 @@ camera.fov  130.
 # sky features
 sky.color   0 .7 .93
 sky.center  0 -200 0
-sky.radius  201
+sky.radius  205
 
 # terrain features
 terrain.color .6 .4 .3

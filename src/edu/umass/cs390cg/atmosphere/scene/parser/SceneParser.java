@@ -1,6 +1,7 @@
 package edu.umass.cs390cg.atmosphere.scene.parser;
 
 import edu.umass.cs390cg.atmosphere.Camera;
+import edu.umass.cs390cg.atmosphere.ScatteringEquations;
 import edu.umass.cs390cg.atmosphere.scene.Scene;
 
 import javax.vecmath.Color3f;
@@ -26,6 +27,8 @@ public class SceneParser {
   }
 
   public Scene yieldScene() {
+    ScatteringEquations.sky = scene.sky;
+    ScatteringEquations.terrain = scene.terrain;
     ar = 1.f*scene.width/scene.height;
     scene.camera = new Camera(eye,at,up,fov,ar);
     return scene;

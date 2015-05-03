@@ -30,6 +30,7 @@ public class SceneReader {
     while(sc.hasNextLine()) {
       sceneParser.parseLine(sc.nextLine(), i++);
     }
+
     return sceneParser.yieldScene();
   }
 }

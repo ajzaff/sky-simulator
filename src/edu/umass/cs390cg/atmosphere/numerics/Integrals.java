@@ -20,13 +20,13 @@ public final class Integrals {
       Vector3f B,
       int n)
   {
-    Vector3f d;
+    Vector3f dir;
     Object[] args;
     float t, u, result;
 
-    d = new Vector3f(B); d.sub(A);
-    Ray ray = new Ray(A,d);
-    u = d.length() / n;
+    dir = new Vector3f(B); dir.sub(A);
+    Ray ray = new Ray(A,dir);
+    u = dir.length() / n;
 
     result = 0;
     for(t=0; t <= 1; t += u) {
