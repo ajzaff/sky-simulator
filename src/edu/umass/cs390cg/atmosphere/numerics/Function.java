@@ -1,7 +1,7 @@
 package edu.umass.cs390cg.atmosphere.numerics;
 
 public interface Function {
-  float evaluate(Object[] args);
+  double evaluate(Object[] args);
 }
 
 /*
