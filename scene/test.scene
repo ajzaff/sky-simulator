@@ -15,10 +15,10 @@ sky.center  0 -200 0
 sky.radius  205
 
 # terrain features
-terrain.color .6 .4 .3
+terrain.color 1 0 0
 terrain.center  0 -200 0
 terrain.radius  200
 
 # sun features
 sun.direction 1 -1 1
-sun.color  15. 15. 15.
+sun.color  150 150 150

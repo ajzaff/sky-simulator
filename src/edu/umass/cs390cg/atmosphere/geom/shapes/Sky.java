@@ -17,10 +17,14 @@ import static edu.umass.cs390cg.atmosphere.ScatteringEquations.*;
 
 public class Sky extends Sphere {
   public Color3f color;
+  public static float lowestHeight = 10000f;
 
   public Color3f calculateShading(Ray ray, HitRecord hit) {
 
-    return ScatteringEquations.InScatterAmount(ray, hit);
+    float height = (hit.pos.y - r.scene.camera.center.y)/ (sky.radius - r.scene.camera.center.y);
+
+    return new Color3f(height, height, height);
+    //return ScatteringEquations.InScatterAmount(ray, hit);
 
   }
 }

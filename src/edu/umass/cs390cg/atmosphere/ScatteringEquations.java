@@ -12,6 +12,8 @@ import edu.umass.cs390cg.atmosphere.numerics.Integrals;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3f;
 
+import java.util.Vector;
+
 import static edu.umass.cs390cg.atmosphere.RayTracer.r;
 import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
 import static java.lang.Math.*;
@@ -26,15 +28,22 @@ public class ScatteringEquations {
     public static Terrain terrain;
     public static float scale; // 1 / (Outer radius - inner radius)
     public static float scaleDepth = 0.25f; // Depth of average atmospheric density, 0.25
-    public static float scaleOverScaleDepth = scale / scaleDepth;
+    public static float scaleOverScaleDepth;
 
     public static final float Mie_G = -.8f;
     public static float KMie = 0.0015f;
     public static Color3f Wavelength = new Color3f(0.650f, 0.570f, 0.475f);
     public static Color3f InvWavelength = new Color3f(
-            Wavelength.x * Wavelength.x * Wavelength.x * Wavelength.x,
-            Wavelength.y * Wavelength.y * Wavelength.y * Wavelength.y,
-            Wavelength.z * Wavelength.z * Wavelength.z * Wavelength.z);
+            1f/(float)Math.pow(Wavelength.x, 4),
+            1f/(float)Math.pow(Wavelength.y, 4),
+            1f/(float)Math.pow(Wavelength.z, 4));
+
+    public static void Initialize(Sky sky, Terrain terrain){
+        ScatteringEquations.sky = sky;
+        ScatteringEquations.terrain = terrain;
+        scale = 1f / (sky.radius  - terrain.radius);
+        scaleOverScaleDepth = scale/scaleDepth;
+    }
 
     //endregion
 
@@ -228,15 +237,25 @@ public class ScatteringEquations {
         );
     }
 
+    public static float scaledHeight(Vector3f pos){
+        float height = height(pos)*scale;
+        if(height < 0 || height > 1)
+            System.out.println("scaled Height function broken, given value out of range");
+        return height;
+    }
+
 
     /**
-     * Gets the altitude of a point in the atmosphere.
+     * Gets the vertical distance from the terrain surface
      *
      * @param pos a point in the atmosphere.
      * @return the altutide of this point [0,1) iif
      * the point is contained within the atmosphere.
      */
     public static float height(Vector3f pos) {
-        return Subtract(pos, terrain.center).length() - terrain.radius;
+        float height = Subtract(pos, terrain.center).length() - terrain.radius;
+        if(height < 0 || height > sky.radius - terrain.radius)
+            System.out.println("Height function broken, given value out of range");
+        return height;
     }
 }

@@ -27,8 +27,8 @@ public class SceneParser {
   }
 
   public Scene yieldScene() {
-    ScatteringEquations.sky = scene.sky;
-    ScatteringEquations.terrain = scene.terrain;
+    ScatteringEquations.Initialize(scene.sky, scene.terrain);
+
     ar = 1.f*scene.width/scene.height;
     scene.camera = new Camera(eye,at,up,fov,ar);
     return scene;

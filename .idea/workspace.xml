@@ -1,15 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java" description="return SubVec(pos, terrain.center).length() - terr..." line="239" />
+    <bookmark url="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java" description="return SubVec(pos, terrain.center).length() - terr..." line="258" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c70d3f15-f2c8-45a6-a907-90a1df3373a5" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.png" afterPath="$PROJECT_DIR$/test.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ScaledHeightOfSkyMap.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/RayTests.java" />
+      <change type="DELETED" beforePath="C:\Users\DoctorSalt\Desktop\Dropbox\WorkSpace\sky-simulator\test.png" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations$1.class" afterPath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations$1.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations$2.class" afterPath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations$2.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations$3.class" afterPath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations$3.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations.class" afterPath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/ScatteringEquations.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/scene/Scene.class" afterPath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/scene/Scene.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.class" afterPath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.class" afterPath="$PROJECT_DIR$/bin/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java" afterPath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java" afterPath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.java" afterPath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.java" afterPath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/numerics/Vec.java" afterPath="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/numerics/Vec.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/scene/test.scene" afterPath="$PROJECT_DIR$/scene/test.scene" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sky-simulator.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,71 +41,37 @@
     <favorites_list name="sky-simulator" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.48005503">
+    <splitter split-orientation="horizontal" split-proportion="0.426">
       <split-first>
         <leaf>
           <file leaf-file-name="RayTracer.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/RayTracer.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-1.7966101">
-                  <caret line="52" column="36" selection-start-line="52" selection-start-column="35" selection-end-line="52" selection-end-column="36" />
+                <state vertical-scroll-proportion="-4.6949153">
+                  <caret line="49" column="46" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="46" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="SceneParser.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-1.7966101">
-                  <caret line="64" column="39" selection-start-line="64" selection-start-column="39" selection-end-line="64" selection-end-column="39" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SceneReader.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneReader.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SceneProperties.java" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneProperties.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.41688654">
-                  <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ScatteringEquations.java" pinned="false" current-in-tab="false">
+          <file leaf-file-name="ScatteringEquations.java" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-5.1764708">
-                  <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
+                <state vertical-scroll-proportion="0.424581">
+                  <caret line="225" column="63" selection-start-line="225" selection-start-column="63" selection-end-line="225" selection-end-column="63" />
                   <folding>
                     <element signature="imports" expanded="true" />
-                    <element signature="e#1552#1574#0" expanded="false" />
-                    <element signature="docComment;method#KRayleigh#0;class#ScatteringEquations#0" expanded="false" />
-                    <element signature="e#2099#2100#0" expanded="true" />
-                    <element signature="e#2126#2127#0" expanded="true" />
+                    <element signature="e#2293#2294#0" expanded="true" />
+                    <element signature="e#2320#2321#0" expanded="true" />
                     <element signature="docComment;method#RayleighPhaseFunction#0;class#ScatteringEquations#0" expanded="false" />
-                    <element signature="e#2561#2562#0" expanded="true" />
-                    <element signature="e#2619#2620#0" expanded="true" />
+                    <element signature="e#2755#2756#0" expanded="true" />
+                    <element signature="e#2813#2814#0" expanded="true" />
                     <element signature="docComment;method#MiePhaseFunction#0;class#ScatteringEquations#0" expanded="false" />
-                    <element signature="e#3345#3394#0" expanded="false" />
+                    <element signature="e#3539#3588#0" expanded="false" />
                     <element signature="docComment;method#RayleighOutScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
                     <element signature="docComment;method#MieOutScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
                     <element signature="docComment;method#InScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
                     <element signature="docComment;method#height#0;class#ScatteringEquations#0" expanded="false" />
-                    <element signature="e#8500#8501#0" expanded="true" />
-                    <element signature="e#8578#8579#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -117,12 +94,22 @@
           <file leaf-file-name="Scene.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="48" column="16" selection-start-line="48" selection-start-column="16" selection-end-line="48" selection-end-column="16" />
+                <state vertical-scroll-proportion="-2.881356">
+                  <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
                   <folding>
                     <element signature="e#1278#1279#0" expanded="true" />
                     <element signature="e#1324#1325#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="test.scene" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/scene/test.scene">
+              <provider selected="true" editor-type-id="text-editor">
+                <state vertical-scroll-proportion="0.0">
+                  <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -134,43 +121,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="test.scene" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/scene/test.scene">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="23" column="22" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Vec.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/numerics/Vec.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-5.0">
-                  <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
-                  <folding>
-                    <element signature="n#!!doc;n#Scale#0;n#Vec#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Sphere.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sphere.java">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="0.0">
-                  <caret line="48" column="22" selection-start-line="48" selection-start-column="22" selection-end-line="48" selection-end-column="22" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="Sky.java" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.java">
               <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-6.12">
-                  <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+                <state vertical-scroll-proportion="-8.16">
+                  <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -198,19 +153,16 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Tuple3f.class" pinned="false" current-in-tab="false">
-            <entry file="jar://$PROJECT_DIR$/Jars/vecmath.jar!/javax/vecmath/Tuple3f.class">
-              <provider selected="true" editor-type-id="text-editor">
-                <state vertical-scroll-proportion="-7.36">
-                  <caret line="285" column="22" selection-start-line="285" selection-start-column="22" selection-end-line="285" selection-end-column="22" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
         </leaf>
       </split-second>
     </splitter>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -226,14 +178,15 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/numerics/Integrals.java" />
         <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/RayTracer.java" />
-        <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneReader.java" />
         <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneProperties.java" />
-        <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java" />
         <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/numerics/Vec.java" />
+        <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/RayTests.java" />
+        <option value="$PROJECT_DIR$/scene/test.scene" />
+        <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneReader.java" />
+        <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.java" />
+        <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java" />
         <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.java" />
         <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java" />
-        <option value="$PROJECT_DIR$/scene/test.scene" />
-        <option value="$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.java" />
       </list>
     </option>
   </component>
@@ -241,10 +194,8 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="20" />
-    <option name="y" value="14" />
-    <option name="width" value="1759" />
-    <option name="height" value="865" />
+    <option name="width" value="1755" />
+    <option name="height" value="1032" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -363,76 +314,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="atmosphere" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="numerics" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sky-simulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sky-simulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="atmosphere" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geom" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sky-simulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sky-simulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="atmosphere" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="geom" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="shapes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sky-simulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sky-simulator" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="scene" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -452,6 +333,11 @@
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
     <property name="dynamic.classpath" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\DoctorSalt\Desktop\Dropbox\WorkSpace\sky-simulator" />
+    </key>
   </component>
   <component name="RunManager" selected="Application.RayTracer">
     <configuration default="false" name="RayTracer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -644,21 +530,21 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="20" y="14" width="1759" height="865" extended-state="0" />
+    <frame x="0" y="0" width="1755" height="1032" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32333332" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.323043" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4237762" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33406836" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.09" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14015375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.13644214" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973261" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.13743356" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
@@ -696,19 +582,19 @@
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java</url>
-          <line>48</line>
-          <properties />
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
@@ -750,17 +636,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="48" column="16" selection-start-line="48" selection-start-column="16" selection-end-line="48" selection-end-column="16" />
-          <folding>
-            <element signature="e#1278#1279#0" expanded="true" />
-            <element signature="e#1324#1325#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sphere.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -798,14 +673,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.12">
-          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/numerics/Integrals.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -816,9 +683,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/RayTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26795095">
+          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31054688">
+          <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneProperties.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35726795">
+          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/numerics/Vec.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.0">
+        <state vertical-scroll-proportion="0.31657356">
           <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc;n#Scale#0;n#Vec#0" expanded="false" />
@@ -826,67 +717,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.1764708">
-          <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1552#1574#0" expanded="false" />
-            <element signature="docComment;method#KRayleigh#0;class#ScatteringEquations#0" expanded="false" />
-            <element signature="e#2099#2100#0" expanded="true" />
-            <element signature="e#2126#2127#0" expanded="true" />
-            <element signature="docComment;method#RayleighPhaseFunction#0;class#ScatteringEquations#0" expanded="false" />
-            <element signature="e#2561#2562#0" expanded="true" />
-            <element signature="e#2619#2620#0" expanded="true" />
-            <element signature="docComment;method#MiePhaseFunction#0;class#ScatteringEquations#0" expanded="false" />
-            <element signature="e#3345#3394#0" expanded="false" />
-            <element signature="docComment;method#RayleighOutScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
-            <element signature="docComment;method#MieOutScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
-            <element signature="docComment;method#InScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
-            <element signature="docComment;method#height#0;class#ScatteringEquations#0" expanded="false" />
-            <element signature="e#8500#8501#0" expanded="true" />
-            <element signature="e#8578#8579#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/scene/test.scene">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="22" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/RayTracer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.7966101">
-          <caret line="52" column="36" selection-start-line="52" selection-start-column="35" selection-end-line="52" selection-end-column="36" />
+          <caret line="23" column="21" selection-start-line="23" selection-start-column="21" selection-end-line="23" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneReader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="17" column="33" selection-start-line="17" selection-start-column="33" selection-end-line="17" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.79334503">
+          <caret line="33" column="26" selection-start-line="33" selection-start-column="26" selection-end-line="33" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/parser/SceneParser.java">
+    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/Scene.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.7966101">
-          <caret line="64" column="39" selection-start-line="64" selection-start-column="39" selection-end-line="64" selection-end-column="39" />
+        <state vertical-scroll-proportion="-2.881356">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding>
+            <element signature="e#1278#1279#0" expanded="true" />
+            <element signature="e#1324#1325#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/RayTracer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.6949153">
+          <caret line="49" column="46" selection-start-line="49" selection-start-column="46" selection-end-line="49" selection-end-column="46" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/scene/SceneProperties.java">
+    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/geom/shapes/Sky.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41688654">
-          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
+        <state vertical-scroll-proportion="-8.16">
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -894,6 +763,27 @@
     <entry file="file://$PROJECT_DIR$/test.png">
       <provider selected="true" editor-type-id="images">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/edu/umass/cs390cg/atmosphere/ScatteringEquations.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.424581">
+          <caret line="225" column="63" selection-start-line="225" selection-start-column="63" selection-end-line="225" selection-end-column="63" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2293#2294#0" expanded="true" />
+            <element signature="e#2320#2321#0" expanded="true" />
+            <element signature="docComment;method#RayleighPhaseFunction#0;class#ScatteringEquations#0" expanded="false" />
+            <element signature="e#2755#2756#0" expanded="true" />
+            <element signature="e#2813#2814#0" expanded="true" />
+            <element signature="docComment;method#MiePhaseFunction#0;class#ScatteringEquations#0" expanded="false" />
+            <element signature="e#3539#3588#0" expanded="false" />
+            <element signature="docComment;method#RayleighOutScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
+            <element signature="docComment;method#MieOutScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
+            <element signature="docComment;method#InScatterAmount#0;class#ScatteringEquations#0" expanded="false" />
+            <element signature="docComment;method#height#0;class#ScatteringEquations#0" expanded="false" />
+          </folding>
+        </state>
       </provider>
     </entry>
   </component>
