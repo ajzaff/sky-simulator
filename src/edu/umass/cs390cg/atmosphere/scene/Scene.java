@@ -9,13 +9,14 @@ import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 
 import javax.imageio.ImageIO;
 import javax.vecmath.Color3f;
+import javax.vecmath.Vector3d;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 public class Scene {
   public String output = "output.png";
-  public Color3f[][] image;
+  public Vector3d[][] image;
   public int width, height;
   public Terrain terrain = new Terrain();
   public Sky sky = new Sky();
@@ -24,7 +25,7 @@ public class Scene {
 
   public HitRecord intersectScene(Ray ray) {
     HitRecord r, best = null;
-    float tMin = Float.MAX_VALUE;
+    double tMin = Double.MAX_VALUE;
 
     r=intersectTerrain(ray);
     if (r != null && r.t < tMin) {
@@ -59,7 +60,7 @@ public class Scene {
 
     index = 0;
     // apply a standard 2.2 gamma correction
-    float gamma = 1.f / 2.2f;
+    double gamma = 1.f / 2.2f;
     for (y=height-1; y >= 0; y --) {
       for (x=0; x<width; x ++) {
         Color3f c = new Color3f(image[x][y]);

@@ -1,6 +1,6 @@
 package edu.umass.cs390cg.atmosphere.geom;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 public class HitRecord {
 
@@ -9,9 +9,9 @@ public class HitRecord {
   }
 
   public HitType type;
-  public float t;
-  public Vector3f pos = new Vector3f(0,0,0),
-    normal = new Vector3f(0,0,0);
+  public double t;
+  public Vector3d pos = new Vector3d(0,0,0),
+    normal = new Vector3d(0,0,0);
 
   public void set(HitRecord r) {
     this.t = r.t;

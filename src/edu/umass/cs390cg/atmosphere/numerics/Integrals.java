@@ -2,7 +2,7 @@ package edu.umass.cs390cg.atmosphere.numerics;
 
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 public final class Integrals {
 
@@ -14,17 +14,17 @@ public final class Integrals {
    * @param n a number of points [1,)
    * @return the value of the integral.
    */
-  public static float estimateIntegral(
+  public static double estimateIntegral(
       Function function,
-      Vector3f A,
-      Vector3f B,
+      Vector3d A,
+      Vector3d B,
       int n)
   {
-    Vector3f dir;
+    Vector3d dir;
     Object[] args;
-    float t, u, result;
+    double t, u, result;
 
-    dir = new Vector3f(B); dir.sub(A);
+    dir = new Vector3d(B); dir.sub(A);
     Ray ray = new Ray(A,dir);
     u = dir.length() / n;
 

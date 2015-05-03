@@ -15,39 +15,39 @@ import java.io.*;
 public class Vec {
 
     //region Vector Functions
-    public static Vector3f Scale(Vector3f a, float scale) {
-        return new Vector3f(
+    public static Vector3d Scale(Vector3d a, double scale) {
+        return new Vector3d(
                 a.x * scale,
                 a.y * scale,
                 a.z * scale);
     }
 
-    public static Vector3f Pointwise(Vector3f a, Vector3f b) {
-        return new Vector3f(
+    public static Vector3d Pointwise(Vector3d a, Vector3d b) {
+        return new Vector3d(
                 a.x * b.x,
                 a.y * b.y,
                 a.z * b.z);
     }
 
-    public static Vector3f Add(Vector3f a, Vector3f b) {
-        return new Vector3f(
+    public static Vector3d Add(Vector3d a, Vector3d b) {
+        return new Vector3d(
                 a.x + b.x,
                 a.y + b.y,
                 a.z + b.z);
     }
 
-    public static Vector3f Subtract(Vector3f a, Vector3f b) {
-        return new Vector3f(
+    public static Vector3d Subtract(Vector3d a, Vector3d b) {
+        return new Vector3d(
                 a.x - b.x,
                 a.y - b.y,
                 a.z - b.z);
     }
 
-    public static Vector3f Negate(Vector3f r) {
-        return new Vector3f(-r.x, -r.y, -r.z);
+    public static Vector3d Negate(Vector3d r) {
+        return new Vector3d(-r.x, -r.y, -r.z);
     }
 
-    public static float getDeterminent(Vector3f a, Vector3f b, Vector3f c) {
+    public static double getDeterminent(Vector3d a, Vector3d b, Vector3d c) {
         return a.x * b.y * c.z +
                 b.x * c.y * a.z +
                 c.x * a.y * b.z -
@@ -59,6 +59,7 @@ public class Vec {
     // endregion
 
     //region Color functions
+    /*
     public static Color3f Multiply(Color3f a, Color3f b) {
         return new Color3f(
                 a.x * b.x,
@@ -66,11 +67,11 @@ public class Vec {
                 a.z * b.z);
     }
 
-    public static Color3f Scale(Color3f a, float scale){
+    public static Color3f Scale(Color3f a, double scale){
         return new Color3f(
-                a.x * scale,
-                a.y * scale,
-                a.z * scale);
+                (float)(a.x * scale),
+                (float)(a.y * scale),
+                (float)(a.z * scale));
     }
 
     public static Color3f AddColors(Color3f a, Color3f b) {
@@ -85,23 +86,24 @@ public class Vec {
             return false;
         else
             return true;
-    }
+    }*/
 
-    public static Color3f VecToColor(Vector3f v) {
-        return new Color3f(v.x, v.y, v.z);
-    }
+    /*public static Color3f VecToColor(Vector3d v) {
+        return new Color3f((double)v.x, v.y, v.z);
+    }*/
     //endregion
 
-    public static Ray NegateRay(Ray r) {
-        return new Ray(r.d, new Vector3f(-r.d.x, -r.d.y, -r.d.z));
-    }
+    /*public static Ray NegateRay(Ray r) {
+        return new Ray(r.d, new Vector3d(-r.d.x, -r.d.y, -r.d.z));
+    }*/
 
+    /*
 
     public static boolean isCloseEnough(float actual, float target, float tolerance) {
         if (actual <= target + tolerance && (actual >= target - tolerance))
             return true;
         else
             return false;
-    }
+    }*/
 
 }

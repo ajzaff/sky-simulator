@@ -3,45 +3,45 @@ package edu.umass.cs390cg.atmosphere.geom.shapes;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 
-import javax.vecmath.Vector3f;
+import javax.vecmath.Vector3d;
 
 public class Sphere implements Shape {
-  public Vector3f center;
-  public float radius;
+  public Vector3d center;
+  public double radius;
 
   public Sphere() {
   }
 
-  public Sphere(Vector3f pos, float r) {
-    center = new Vector3f(pos);
+  public Sphere(Vector3d pos, double r) {
+    center = new Vector3d(pos);
     radius = r;
   }
 
   @Override
-  public HitRecord hit(Ray ray, float tmin, float tmax) {
+  public HitRecord hit(Ray ray, double tmin, double tmax) {
 
 		/* compute ray-plane intersection */
-    Vector3f temp = new Vector3f(ray.o);
+    Vector3d temp = new Vector3d(ray.o);
     temp.sub(center);
-    float A = ray.d.dot(ray.d);
-    float B = 2f * temp.dot(ray.d);
-    float C = temp.dot(temp) - (radius*radius);
-    float innerTerm = B*B - 4f*A*C;
+    double A = ray.d.dot(ray.d);
+    double B = 2f * temp.dot(ray.d);
+    double C = temp.dot(temp) - (radius*radius);
+    double innerTerm = B*B - 4f*A*C;
 
     if(innerTerm < 0)
       return null;
 
 		/* if t out of range, return null */
-    float t0 = (-B + (float)Math.sqrt(innerTerm)) / (2f*A);
-    float t1 = (-B - (float)Math.sqrt(innerTerm)) / (2f*A);
+    double t0 = (-B + Math.sqrt(innerTerm)) / (2f*A);
+    double t1 = (-B - Math.sqrt(innerTerm)) / (2f*A);
     if ((t0 < tmin || t0 > tmax) && (t1 < tmin || t1 > tmax))
       return null;
-    float t;
+    double t;
     if(t0 < tmin) t=t1;
     else if(t1 < tmin) t=t0;
     else t=Math.min(t0,t1);
 
-    temp = new Vector3f(ray.pointAt(t));
+    temp = new Vector3d(ray.pointAt(t));
     temp.sub(center);
 
 		/* construct hit record */
