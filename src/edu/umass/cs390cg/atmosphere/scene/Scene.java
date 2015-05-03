@@ -43,11 +43,13 @@ public class Scene {
     return best;
   }
 
-  HitRecord intersectSky(Ray ray) {
+
+
+  public HitRecord intersectSky(Ray ray) {
     return sky.hit(ray, .001f, 0xffffff);
   }
 
-  HitRecord intersectTerrain(Ray ray) {
+  public HitRecord intersectTerrain(Ray ray) {
     return terrain.hit(ray, .001f, 0xffffff);
   }
 
