@@ -4,9 +4,7 @@ import edu.umass.cs390cg.atmosphere.Camera;
 import edu.umass.cs390cg.atmosphere.ScatteringEquations;
 import edu.umass.cs390cg.atmosphere.scene.Scene;
 
-import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 import static edu.umass.cs390cg.atmosphere.scene.SceneProperties.*;
 
@@ -82,8 +80,8 @@ public class SceneParser {
       offset += PROPERTY_TERRAIN_RADIUS.length();
       scene.terrain.radius = consumeDouble(line);
     }
-    else if(line.startsWith(PROPERTY_CAMERA_AT)) {
-      offset += PROPERTY_CAMERA_AT.length();
+    else if(line.startsWith(PROPERTY_CAMERA_GAZE)) {
+      offset += PROPERTY_CAMERA_GAZE.length();
       at = consumeVector(line);
     }
     else if(line.startsWith(PROPERTY_CAMERA_EYE)) {

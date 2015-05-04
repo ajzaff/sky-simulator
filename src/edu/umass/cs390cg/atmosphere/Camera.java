@@ -10,7 +10,7 @@ public class Camera {
   public Vector3d center, corner,across;
 
   public Camera(Vector3d eye,
-                Vector3d at,
+                Vector3d gaze,
                 Vector3d up,
                 double fovy,
                 double ar)	{
@@ -18,7 +18,7 @@ public class Camera {
     // we will use a default camera
     this.eye = new Vector3d(eye);
     this.up = new Vector3d(up);
-    this.at = new Vector3d(at);
+    this.at = new Vector3d(gaze);
 
     this.fovy = fovy;
     aspect_ratio = ar;
@@ -26,12 +26,10 @@ public class Camera {
 		/* Code for initializing camera
 		 * Compute the four corner points of the camera's image plane */
     double dist = 1.f;
-    double top = dist * (double)Math.tan(this.fovy * Math.PI / 360.d);
+    double top = dist * Math.tan(this.fovy * Math.PI / 360.d);
     double bottom = -top;
     double right = aspect_ratio * top;
     double left = -right;
-    Vector3d gaze = new Vector3d();
-    gaze.sub(this.at, this.eye);
 
     center = this.eye;
     Vector3d W = gaze;
