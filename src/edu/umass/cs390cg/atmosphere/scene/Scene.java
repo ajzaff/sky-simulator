@@ -1,6 +1,7 @@
 package edu.umass.cs390cg.atmosphere.scene;
 
 import edu.umass.cs390cg.atmosphere.Camera;
+import edu.umass.cs390cg.atmosphere.ScatteringEquations;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.Sun;
@@ -63,12 +64,9 @@ public class Scene {
     double gamma = 1.f / 2.2f;
     for (y=height-1; y >= 0; y --) {
       for (x=0; x<width; x ++) {
-        Color3f c = new Color3f(image[x][y]);
-        c.x = (float)Math.pow(c.x, gamma);
-        c.y = (float)Math.pow(c.y, gamma);
-        c.z = (float)Math.pow(c.z, gamma);
-        c.clampMax(1.f);
-        pixels[index++] = c.get().getRGB();
+        Color3f color = new Color3f(ScatteringEquations.ExposureCorrection(image[x][y]));
+        color.clampMax(1.f);
+        pixels[index++] = color.get().getRGB();
 
       }
     }
