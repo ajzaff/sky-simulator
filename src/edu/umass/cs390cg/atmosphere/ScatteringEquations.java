@@ -67,25 +67,25 @@ public class ScatteringEquations {
     }
 
 
-    private static double InScatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower, double G) {
-        Vector3d dir = Subtract(B, A);
+    private static double InScatter(Vector3d CameraPoint, Vector3d B, double KConstant, double wavelength, double KPower, double G) {
+        Vector3d dir = Subtract(B, CameraPoint);
         double sampleLength = dir.length() / samplesPerInScatterRay;
         double scaledLength = sampleLength * scale;
         dir.normalize();
         dir.scale(sampleLength);
 
-        Vector3d samplePoint = Add(A, Scale(dir, 0.5d));
+        Vector3d samplePoint = Add(CameraPoint, Scale(dir, 0.5d));
 
         double InscatterIntegral = 0d;
         for (int n = 0; n < samplesPerOutScatterRay; n++) {
 
-            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint)));
+            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint, true, "InScatter")));
 
             Vector3d PointToSun = r.scene.intersectSky(new Ray(samplePoint, r.scene.sun.d)).pos;
 
             double outscatter = exp(
                     -1d * GetOutscatter(samplePoint, PointToSun, KConstant, wavelength, KPower) -
-                            GetOutscatter(samplePoint, A, KConstant, wavelength, KPower));
+                            GetOutscatter(samplePoint, CameraPoint, KConstant, wavelength, KPower));
 
             InscatterIntegral += density * outscatter * scaledLength;
             samplePoint = Add(samplePoint, dir);
@@ -94,8 +94,10 @@ public class ScatteringEquations {
 
         // cos = lightDir dot ldir
         //TODO Ensure this is correct
-        Vector3d ScatterRayTowardsCamera = Subtract(A, B);
-        double cos = ScatterRayTowardsCamera.dot(r.scene.sun.d) / ScatterRayTowardsCamera.length();
+        Vector3d ScatterRayTowardsCamera = Subtract(CameraPoint, B);
+        ScatterRayTowardsCamera.normalize();
+
+        double cos = ScatterRayTowardsCamera.dot(r.scene.sun.d);
         //System.out.println("Cosine of angle is " + cos);
 
         double Coefficients = GetK(KConstant, wavelength, KPower) * Phase(cos, G);
@@ -103,9 +105,17 @@ public class ScatteringEquations {
     }
 
     private static double OpticalDepth(Vector3d A, Vector3d B) {
+
+        height(A, true, "OpticalA");// Debugging
+        height(B, true, "OpticalB");
+
         Vector3d dir = Subtract(B, A);
         double sampleLength = dir.length() / samplesPerOutScatterRay;
         double scaledLength = sampleLength * scale;
+
+        if(!isCloseEnough(scaledLength * samplesPerOutScatterRay/scale, dir.length(), 0.1d))
+            System.out.println(dir.length() + " length vs segmented" + scaledLength * samplesPerOutScatterRay/scale);
+
         dir.normalize();
         dir.scale(sampleLength);
 
@@ -113,7 +123,7 @@ public class ScatteringEquations {
 
         double value = 0d;
         for (int n = 0; n < samplesPerOutScatterRay; n++) {
-            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint)));
+            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint, false, "Optical Depth")));
             value += density * scaledLength;
             samplePoint = Add(samplePoint, dir);
         }
@@ -128,16 +138,15 @@ public class ScatteringEquations {
      * @return the altutide of this point [0,1) iif
      * the point is contained within the atmosphere.
      */
-    public static double height(Vector3d pos) {
+    public static double height(Vector3d pos, boolean checked, String from){
         double height = pos.length();
-        if (height < terrain.radius || height > sky.radius + 0.1) {
+        if (height < terrain.radius - 0.8 || height > sky.radius + 0.1) {
 
-            System.out.println("Height is actually " + height + " at " + pos);
+            if(checked)
+                System.out.println("From " + from + " height is" + height + " at " + pos);
         }
         return height;
     }
-
-
 
 
     private static double Phase(double cos, double g){

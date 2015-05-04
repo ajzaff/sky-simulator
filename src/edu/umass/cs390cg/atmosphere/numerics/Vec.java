@@ -50,6 +50,13 @@ public class Vec {
         return new Vector3d(-r.x, -r.y, -r.z);
     }
 
+    public static boolean isCloseEnough(double actual, double target, double tolerance) {
+        if (actual <= target + tolerance && (actual >= target - tolerance))
+            return true;
+        else
+            return false;
+    }
+
 
 
     /*
@@ -105,11 +112,6 @@ public class Vec {
 
     /*
 
-    public static boolean isCloseEnough(float actual, float target, float tolerance) {
-        if (actual <= target + tolerance && (actual >= target - tolerance))
-            return true;
-        else
-            return false;
-    }*/
+    */
 
 }
