@@ -50,6 +50,10 @@ public class Vec {
         return new Vector3d(-r.x, -r.y, -r.z);
     }
 
+    public static Vector3d ColorNormalize(Vector3d V, double min, double max){
+        
+    }
+
     public static boolean isCloseEnough(double actual, double target, double tolerance) {
         if (actual <= target + tolerance && (actual >= target - tolerance))
             return true;
