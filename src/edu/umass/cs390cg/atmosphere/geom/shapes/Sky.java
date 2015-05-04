@@ -12,7 +12,7 @@ public class Sky extends Sphere {
 
   public Vector3d calculateShading(Ray ray, HitRecord hit) {
     //System.out.println("Hit at " + hit.pos);
-    double height = ScatteringEquations.height(hit.pos);
+    double height = ScatteringEquations.height(hit.pos, true, "Sky shader");
     if (height < 200d || height > 210d) {
       System.out.println("Height is really " + height);
     }
