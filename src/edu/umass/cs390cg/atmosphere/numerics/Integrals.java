@@ -34,11 +34,9 @@ public final class Integrals {
 
         for (t = 0; t <= 1; t += segmentLength) {
             args = new Object[]{ray.pointAt(t + segmentLength / 2)};
-            result = Vec.Add(
-                        Vec.Scale(function.evaluate(args), segmentLength * scale),
-                        result);
+            result = Vec.Add(function.evaluate(args), result);
         }
 
-        return result;
+        return Vec.Scale(result, segmentLength * scale);
     }
 }
