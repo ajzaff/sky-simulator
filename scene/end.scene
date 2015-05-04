@@ -7,7 +7,7 @@ scene.output    test.png
 camera.gaze  1 -1 1
 camera.up   0 1 0
 camera.eye  0 200.1 0
-camera.fov  140
+camera.fov  160
 
 # sky features
 sky.color   0 .7 .93
