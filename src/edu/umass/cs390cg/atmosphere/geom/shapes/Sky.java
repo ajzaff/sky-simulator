@@ -1,23 +1,32 @@
 package edu.umass.cs390cg.atmosphere.geom.shapes;
 
+import com.sun.org.apache.xml.internal.resolver.readers.SAXCatalogParser;
 import edu.umass.cs390cg.atmosphere.ScatteringEquations;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
+import edu.umass.cs390cg.atmosphere.numerics.Vec;
 
 import javax.vecmath.Vector3d;
 
 public class Sky extends Sphere {
-  public Vector3d color;
-  public static double lowestHeight = 10000d;
+    public Vector3d color;
+    public static double lowestHeight = 10000d;
 
-  public Vector3d calculateShading(Ray ray, HitRecord hit) {
-    //System.out.println("Hit at " + hit.pos);
-    double height = ScatteringEquations.height(hit.pos, true, "Sky shader");
-    if (height < 200d || height > 210d) {
-      System.out.println("Height is really " + height);
+    double LargestValue = -2000000d;
+
+    public Vector3d calculateShading(Ray ray, HitRecord hit) {
+
+        if (ScatteringEquations.Debug) {
+            //double depth = ScatteringEquations.OpticalDepth(ray.o, hit.pos);
+            double depth = ScatteringEquations.GetLinearDepth(ray.o, hit.pos);
+            ScatteringEquations.Update(depth);
+            //return Vec.ColorNormalize(new Vector3d(depth, depth, depth), 0, 7);
+
+            return ScatteringEquations.GetLightRays(ray, hit);
+        } else {
+
+            return ScatteringEquations.GetLightRays(ray, hit);
+        }
+
     }
-    Vector3d v3 = ScatteringEquations.GetLightRays(ray, hit);
-    return v3;
-
-  }
 }

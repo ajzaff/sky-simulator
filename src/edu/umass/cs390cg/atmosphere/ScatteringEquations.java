@@ -5,15 +5,9 @@ import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
-import edu.umass.cs390cg.atmosphere.numerics.Function;
-import edu.umass.cs390cg.atmosphere.numerics.Integrals;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
-import javax.vecmath.Vector4f;
-
-import java.security.KeyPair;
-import java.util.Vector;
 
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
@@ -23,6 +17,8 @@ import static java.lang.Math.*;
 public class ScatteringEquations {
 
     //region Declarations
+
+    public static boolean Debug = true;
 
     public static int samplesPerInScatterRay = 10;
     public static int samplesPerOutScatterRay = 10;
@@ -37,10 +33,22 @@ public class ScatteringEquations {
     public static double Km = 0.0015d;
     public static final double Mie_G = -.8d;
     public static Vector3d Wavelength = new Vector3d(0.650d, 0.570d, 0.475d);
-    /*public static Vector3d InvWavelength = new Vector3d(
-            1d / Math.pow(Wavelength.x, 4),
-            1d / Math.pow(Wavelength.y, 4),
-            1d / Math.pow(Wavelength.z, 4));*/
+    public static Vector3d AmbientColor = new Vector3d(0.1d, 0.1d, 0.1d);
+
+    public static double LargestVal = Double.MIN_VALUE;
+    public static double SmallestVal = Double.MAX_VALUE;
+
+    public static void Update(double val) {
+        if (val > LargestVal) {
+            LargestVal = val;
+            //System.out.println("largest val " + val);
+        }
+        if (val < SmallestVal) {
+            SmallestVal = val;
+            //System.out.println("smallest val " + val);
+        }
+    }
+
 
     public static void Initialize(Sky sky, Terrain terrain) {
         ScatteringEquations.sky = sky;
@@ -48,27 +56,107 @@ public class ScatteringEquations {
         scale = 1d / (sky.radius - terrain.radius);
         scaleOverScaleDepth = scale / scaleDepth;
 
-        Vector3d Vec1 = new Vector3d(1,0,0);
-        Vector3d Vec2 = new Vector3d(-1,0,0);
+        Vector3d Vec1 = new Vector3d(1, 0, 0);
+        Vector3d Vec2 = new Vector3d(-1, 0, 0);
+        /*
+        for(double cos = -1d; cos <= 1; cos += 0.1d)
+            System.out.println("Cos " + cos + " -> " + Phase(cos, Mie_G));*///debugger
 
-        System.out.println("Cosin " + GetVectorCos(Vec1, Vec2));
-        System.out.println("Phase 1" + Phase(1, 0));
+        //System.out.println("Cosin " + GetVectorCos(Vec1, Vec2));
+        // System.out.println("Phase 1" + Phase(1, 0));
     }
 
     //endregion
 
-    public static Vector3d GetSurfaceLight(Vector3d IEmitted){
-        // emitted * exp( -t(Pa,Pb)) camera to ground
+    public static Vector3d GetLightFromSurface(Ray ray, HitRecord hit) {
+        Vector3d A = ray.o;
+        Vector3d B = hit.pos;
+
+        // exp(-t(Camera, ground))
+        Vector3d outScatterToCamera = VecExponent(Scale(GetAllOutScatter(A, B), -1));
+
+        // Get the light before it hits the material, hit the material, then reflect towards camera
+        Vector3d IEmitted = GetEmittedLight(ray, hit);
+
+        // Ie * outscattering
+        return Scale(IEmitted, outScatterToCamera);
+    }
+
+
+    // Shades a point given the ray. Uses spec, diffuse, ambient, reflection and refraction sources
+    // These vectors must be normalized.
+    public static Vector3d Shade(Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit) {
+        Vector3d color = Scale(AmbientColor, hit.material.Ka);
+        //return color;
+
+        // Add spec light
+        if (VectorIsNonZero(hit.material.Ks)) {
+            // Points towards the viewing source
+
+            // Reflect expects dir to point to the source, reflects away
+            Vector3d R = Reflect(LightToSurface, hit.normal);
+            // BSpec = Intens * Ks ( max(O, R * V))^P
+            double specAmt = Math.max(0, SurfaceToEye.dot(R));
+            if (hit.material.phong_exp != 1) {
+                specAmt = Math.pow(specAmt, hit.material.phong_exp);
+            }
+            if (specAmt != 0) {
+                color = Add(color, Scale(Scale(lightIntensity, hit.material.Ks), specAmt));
+            }
+        }
+        // Add diffuse light, if available
+        if (VectorIsNonZero(hit.material.Kd)) {
+            // BDiff = Intens * Kd * max(N * L, 0)
+
+            double diffuseAmt = Math.max(0, hit.normal.dot(Negate(LightToSurface)));
+            color = Add(color, Scale(Scale(lightIntensity, hit.material.Kd), diffuseAmt));
+        }
+        return color;//*/
+    }
+
+    public static Vector3d GetEmittedLight(Ray ray, HitRecord hit) {
+        // If point is in sunlight, return Is * attenuation
+        //else return ambient
+
+        // The position of where the light originates from (on sky sphere, or another ground vertex)
+        Vector3d lightPos;
+
+        HitRecord RayToSun = r.scene.intersectScene(new Ray(hit.pos, r.scene.sun.d));
+
+        // If the surface has a direct line of sight with sun, reflect sunlight
+        if (RayToSun.type == HitRecord.HitType.TYPE_SKY) {
+            lightPos = RayToSun.pos;
+            // exp( -t(sun, ground))
+            Vector3d outscatterScale = VecExponent(Scale(GetAllOutScatter(hit.pos, lightPos), -1));
+            // Isun * outScattering
+            Vector3d lightFromSun = Scale(r.scene.sun.color, outscatterScale);
+
+            return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);
+        }
+        // Else reflect the ray off the material and return atmospheric scattering
+        else { // If it's shadowed
+            double cos = GetVectorCos(hit.normal, r.scene.sun.d);
+
+            return Scale(hit.material.Ka, AmbientColor);
+            /*
+            Vector3d reflectDir = Reflect(ray.d, hit.normal);
+            Ray reflectRay = new Ray(hit.pos, reflectDir);
+
+            HitRecord bounceHit = r.scene.intersectScene(reflectRay);
+            lightColor = GetLightRays(reflectRay, bounceHit);
+            lightPos = bounceHit.pos;*/
+        }
+
+        //private Vector3d Shade(Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit) {
+        /*
+        Vector3d LightIntoSurface = Subtract(hit.pos, lightPos);
+        LightIntoSurface.normalize();
+        
+        return Shade(lightColor, LightIntoSurface, Negate(ray.d), hit);*/
 
     }
 
-    public static Vector3d GetLightToSurface(Vector3d Ground){
-        // Is *exp(-t(Pc, Pground)
-        // if shadowed return either ambient or reflected ray?
-
-    }
-
-    public static Vector3d GetLightRays(Ray ray, HitRecord hit){
+    public static Vector3d GetLightRays(Ray ray, HitRecord hit) {
         Vector3d A = ray.o;
         Vector3d B = hit.pos;
 
@@ -117,7 +205,7 @@ public class ScatteringEquations {
 
         //V1 dot v2 when both are normalized
         double cos = GetVectorCos(ScatterRayTowardsCamera, r.scene.sun.d);
-        if(!isCloseEnough(1d, r.scene.sun.d.length() * ScatterRayTowardsCamera.length(), 0.01)) //debugger
+        if (!isCloseEnough(1d, r.scene.sun.d.length() * ScatterRayTowardsCamera.length(), 0.01)) //debugger
             System.out.println("Angle rays aren't normalized, is " + r.scene.sun.d.length() * ScatterRayTowardsCamera.length());
         //System.out.println("Cosine of angle is " + cos + " scat  " + ScatterRayTowardsCamera + " sun " + r.scene.sun.d);
 
@@ -125,17 +213,22 @@ public class ScatteringEquations {
         return InscatterIntegral * Coefficients;
     }
 
-    private static double OpticalDepth(Vector3d A, Vector3d B) {
+    public static double GetLinearDepth(Vector3d A, Vector3d B) {
+        return Subtract(A, B).length();
+    }
+
+    public static double OpticalDepth(Vector3d A, Vector3d B) {
 
         height(A, true, "OpticalA");// Debugging
         height(B, true, "OpticalB");
 
+        //Ray from A to B
         Vector3d dir = Subtract(B, A);
         double sampleLength = dir.length() / samplesPerOutScatterRay;
         double scaledLength = sampleLength * scale;
 
-        if(!isCloseEnough(scaledLength * samplesPerOutScatterRay/scale, dir.length(), 0.1d))
-            System.out.println(dir.length() + " length vs segmented" + scaledLength * samplesPerOutScatterRay/scale);
+        if (!isCloseEnough(scaledLength * samplesPerOutScatterRay / scale, dir.length(), 0.1d))
+            System.out.println(dir.length() + " length vs segmented" + scaledLength * samplesPerOutScatterRay / scale);
 
         dir.normalize();
         dir.scale(sampleLength);
@@ -159,23 +252,24 @@ public class ScatteringEquations {
      * @return the altutide of this point [0,1) iif
      * the point is contained within the atmosphere.
      */
-    public static double height(Vector3d pos, boolean checked, String from){
+    public static double height(Vector3d pos, boolean checked, String from) {
         double height = pos.length();
         if (height < terrain.radius - 0.8 || height > sky.radius + 0.1) {
 
-            if(checked)
+            if (checked)
                 System.out.println("From " + from + " height is" + height + " at " + pos);
         }
         return height;
     }
 
-    public static Vector3d Phase(Vector3d A, Vector3d B, double g){
+    // Okayed for Rayleigh
+    public static Vector3d Phase(Vector3d A, Vector3d B, double g) {
         double phase = Phase(GetVectorCos(A, B), g);
         return new Vector3d(phase, phase, phase);
     }
 
 
-    private static double Phase(double cos, double g){
+    private static double Phase(double cos, double g) {
         double gg = g * g;
 
         return (3 * (1 - gg)) /
@@ -185,24 +279,24 @@ public class ScatteringEquations {
                 pow(1 + gg - 2 * g * cos, 3d / 2);
     }
 
-    private static double GetVectorCos(Vector3d A, Vector3d B){
+    private static double GetVectorCos(Vector3d A, Vector3d B) {
         return A.dot(B);
     }
 
-    private static double GetK(double KCOnstant, double wavelength, double KPower){
+    private static double GetK(double KCOnstant, double wavelength, double KPower) {
         return KCOnstant / (pow(wavelength, KPower));
     }
 
 
     private static double GetOutscatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower) {
-        return 4 * PI  *GetK(KConstant, wavelength, KPower) * OpticalDepth(A, B);
+        return 4 * PI * GetK(KConstant, wavelength, KPower) * OpticalDepth(A, B);
     }
 
-    public static Vector3d GetAllOutScatter(Vector3d A, Vector3d B){
+    public static Vector3d GetAllOutScatter(Vector3d A, Vector3d B) {
         Vector3d RayleighOutScatter = new Vector3d(
-                GetOutscatter(A,B, Kr, Wavelength.x, 4),
-                GetOutscatter(A,B, Kr, Wavelength.y, 4),
-                GetOutscatter(A,B, Kr, Wavelength.z, 4));
+                GetOutscatter(A, B, Kr, Wavelength.x, 4),
+                GetOutscatter(A, B, Kr, Wavelength.y, 4),
+                GetOutscatter(A, B, Kr, Wavelength.z, 4));
 
         Vector3d MieOutScatter = new Vector3d(
                 GetOutscatter(A, B, Km, Wavelength.x, 0.84d),
@@ -217,7 +311,7 @@ public class ScatteringEquations {
         return new Vector3d(value, value, value);
     }
 
-    public static Vector3d ExposureCorrection(Vector3d color){
+    public static Vector3d ExposureCorrection(Vector3d color) {
         // 1 - exp(-exp * color)
         return new Vector3d(
                 1d - exp(color.x * -exposure),
@@ -225,7 +319,7 @@ public class ScatteringEquations {
                 1d - exp(color.z * -exposure));
     }
 
-    public static Vector3d VecExponent(Vector3d V){
+    public static Vector3d VecExponent(Vector3d V) {
         return new Vector3d(
                 exp(V.x),
                 exp(V.y),
@@ -234,6 +328,37 @@ public class ScatteringEquations {
 
     //region OldCode
     /*
+
+        // Shades a point given the ray. Uses spec, diffuse, ambient, reflection and refraction sources
+    // These vectors must be normalized.
+    public static Vector3d Shade(Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit) {
+        Vector3d color = Scale(AmbientColor, hit.material.Ka);
+        //return color;
+
+        // Add spec light
+        if (VectorIsNonZero(hit.material.Ks)) {
+            // Points towards the viewing source
+
+            // Reflect expects dir to point to the source, reflects away
+            Vector3d R = Reflect(LightToSurface, hit.normal);
+            // BSpec = Intens * Ks ( max(O, R * V))^P
+            double specAmt = Math.max(0, SurfaceToEye.dot(R));
+            if (hit.material.phong_exp != 1) {
+                specAmt = Math.pow(specAmt, hit.material.phong_exp);
+            }
+            if (specAmt != 0) {
+                color = Add(color, Scale(Scale(lightIntensity, hit.material.Ks), specAmt));
+            }
+        }
+        // Add diffuse light, if available
+        if (VectorIsNonZero(hit.material.Kd)){
+            // BDiff = Intens * Kd * max(N * L, 0)
+
+            double diffuseAmt = Math.max(0, hit.normal.dot(Negate(LightToSurface)));
+            color = Add(color, Scale(Scale(lightIntensity, hit.material.Kd), diffuseAmt));
+        }
+        return color;//
+}
     private static double scale(double Cos) {
         double x = 1f - Cos;
         return scaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));

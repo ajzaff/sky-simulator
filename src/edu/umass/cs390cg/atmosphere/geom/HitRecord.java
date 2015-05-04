@@ -1,5 +1,7 @@
 package edu.umass.cs390cg.atmosphere.geom;
 
+import edu.umass.cs390cg.atmosphere.geom.shapes.Material;
+
 import javax.vecmath.Vector3d;
 
 public class HitRecord {
@@ -8,6 +10,7 @@ public class HitRecord {
     TYPE_SKY, TYPE_TERRAIN, TYPE_SUN
   }
 
+  public Material material;
   public HitType type;
   public double t;
   public Vector3d pos = new Vector3d(0,0,0),

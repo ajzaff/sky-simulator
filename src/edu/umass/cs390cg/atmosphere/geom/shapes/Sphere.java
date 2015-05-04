@@ -8,6 +8,7 @@ import javax.vecmath.Vector3d;
 public class Sphere implements Shape {
   public Vector3d center;
   public double radius;
+  public Material material = new Material();
 
   public Sphere() {
   }
@@ -50,7 +51,7 @@ public class Sphere implements Shape {
     rec.t = t;						// parameter t (distance along the ray)
     rec.normal = temp;					// normal at the hit point
     rec.normal.normalize();			// normal should be normalized
-
+    rec.material = material;
     return rec;
   }
 }

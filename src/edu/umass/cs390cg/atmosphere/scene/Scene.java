@@ -5,6 +5,7 @@ import edu.umass.cs390cg.atmosphere.ScatteringEquations;
 import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.Sun;
+import edu.umass.cs390cg.atmosphere.geom.shapes.Material;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 
@@ -23,6 +24,7 @@ public class Scene {
   public Sky sky = new Sky();
   public Sun sun = new Sun();
   public Camera camera;
+
 
   public HitRecord intersectScene(Ray ray) {
     HitRecord r, best = null;

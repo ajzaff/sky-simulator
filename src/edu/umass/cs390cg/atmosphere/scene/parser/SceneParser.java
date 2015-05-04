@@ -2,6 +2,7 @@ package edu.umass.cs390cg.atmosphere.scene.parser;
 
 import edu.umass.cs390cg.atmosphere.Camera;
 import edu.umass.cs390cg.atmosphere.ScatteringEquations;
+import edu.umass.cs390cg.atmosphere.geom.shapes.Material;
 import edu.umass.cs390cg.atmosphere.scene.Scene;
 
 import javax.vecmath.Vector3d;
@@ -17,6 +18,8 @@ public class SceneParser {
   // camera variables.
   private Vector3d at, eye, up;
   private double fov;
+
+  private Material mat = new Material();
 
   public SceneParser() {
     scene = new Scene();
@@ -96,6 +99,45 @@ public class SceneParser {
       offset += PROPERTY_CAMERA_FOV.length();
       fov = consumeDouble(line);
     }
+    else if(line.startsWith(PROPERTY_MATERIAL_NAME)) {
+      offset += PROPERTY_MATERIAL_NAME.length();
+      mat.Name = consumeString(line);
+    }
+    else if(line.startsWith(PROPERTY_MATERIAL_TYPE)) {
+      offset += PROPERTY_MATERIAL_TYPE.length();
+      mat.Type = consumeString(line);
+    }
+    else if(line.startsWith(PROPERTY_MATERIAL_KA)) {
+      offset += PROPERTY_MATERIAL_KA.length();
+      mat.Ka = consumeVector(line);
+    }
+    else if(line.startsWith(PROPERTY_MATERIAL_KD)) {
+      offset += PROPERTY_MATERIAL_KD.length();
+      mat.Kd = consumeVector(line);
+    }
+    else if(line.startsWith(PROPERTY_MATERIAL_KS)) {
+      offset += PROPERTY_MATERIAL_KS.length();
+      mat.Ks = consumeVector(line);
+    }
+    else if(line.startsWith(PROPERTY_MATERIAL_PHONG)) {
+      offset += PROPERTY_MATERIAL_PHONG.length();
+      mat.phong_exp = consumeDouble(line);
+    }
+    else if(line.startsWith(PROPERTY_MATERIAL_SEND)) {
+      SendMaterial();
+    }
+  }
+
+  public void SendMaterial(){
+    //if(mat.Name == "ground") // Todo why didn't this compare work?
+      scene.terrain.material = mat;
+    mat = new Material();
+
+  }
+
+  public String consumeString(String line){
+    String floatString = line.substring(offset).trim();
+    return floatString;
   }
 
   public int consumeInt(String line) {

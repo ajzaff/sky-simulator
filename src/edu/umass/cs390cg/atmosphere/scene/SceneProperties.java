@@ -16,4 +16,14 @@ public final class SceneProperties {
   public static final String PROPERTY_CAMERA_UP = "camera.up";
   public static final String PROPERTY_CAMERA_EYE = "camera.eye";
   public static final String PROPERTY_CAMERA_FOV = "camera.fov";
+
+  public static final String PROPERTY_MATERIAL_NAME = "material.name";
+  public static final String PROPERTY_MATERIAL_TYPE = "material.type";
+  public static final String PROPERTY_MATERIAL_KA = "material.ka";
+  public static final String PROPERTY_MATERIAL_KD = "material.kd";
+  public static final String PROPERTY_MATERIAL_KS = "material.ks";
+  public static final String PROPERTY_MATERIAL_PHONG = "material.phong";
+  public static final String PROPERTY_MATERIAL_SEND = "material.send";
+
+
 }

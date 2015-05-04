@@ -7,6 +7,7 @@ import edu.umass.cs390cg.atmosphere.scene.SceneReader;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
+import java.net.SecureCacheResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class RayTracer {
   public static void main(String[] args) {
     if (args.length == 1) {
       r.scene = new SceneReader(args[0]).readScene();
+
       r.startTracing();
     } else {
       System.out.println("Usage: java RayTracer input.scene");
@@ -73,6 +75,7 @@ public class RayTracer {
     }//*/
     //endregion
 
+    System.out.println("Largest " + ScatteringEquations.LargestVal + " Smallest " + ScatteringEquations.SmallestVal);
 
     double timeAtEnd = System.nanoTime()/1e9d;
     System.out.println("Took " + (timeAtEnd-timeAtStart) + " seconds");
@@ -94,8 +97,10 @@ public class RayTracer {
       return scene.sky.calculateShading(ray, hit);
     }
     else {
-      //return new Color3f();
-      return scene.terrain.color;
+      //double depth = ScatteringEquations.GetLinearDepth(ray.o, hit.pos)
+      //return new Vector3d(depth, depth, depth);
+      return scene.terrain.calculateShading(ray, hit);
+      //return scene.terrain.color;
     }
   }
 }
