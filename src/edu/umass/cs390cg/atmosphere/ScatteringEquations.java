@@ -9,9 +9,11 @@ import edu.umass.cs390cg.atmosphere.numerics.Function;
 import edu.umass.cs390cg.atmosphere.numerics.Integrals;
 
 import javax.vecmath.Vector3d;
+
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
 import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
+import static java.lang.Math.PI;
 import static java.lang.Math.exp;
 
 public class ScatteringEquations {
@@ -25,6 +27,11 @@ public class ScatteringEquations {
     public static double scale; // 1 / (Outer radius - inner radius)
     public static double scaleDepth = 0.25d; // Depth of average atmospheric density, 0.25
     public static double scaleOverScaleDepth;
+
+    public static double Kr = 0.0025d;
+    public static double Km = 0.001d;
+    public static double Kr4Pi = Kr * 4 * PI;
+    public static double Km4pi = Km * 4 * PI;
 
     public static final double Mie_G = -.8d;
     public static double KMie = 0.0015d;
@@ -49,7 +56,6 @@ public class ScatteringEquations {
         return scaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
     }
 
-
     public Vector3d Scatter(Ray ray, HitRecord hit) {
         double rayLength = Subtract(hit.pos, ray.o).length();
 
@@ -68,12 +74,10 @@ public class ScatteringEquations {
         Vector3d SamplePoint = Add(startPoint, Scale(RaySegment, 0.5d));
 
 
-        Vector3d myColor = new Vector3d();
-
-        Integrals.estimateIntegral(
+        Vector3d myColor = Integrals.estimateIntegral(
                 new Function() {
                     @Override
-                    public double evaluate(Object[] args) {
+                    public Vector3d evaluate(Object[] args) {
                         Vector3d v = (Vector3d) args[0];
                         double sampleHeight = height(v);
                         double depth = exp(scaleOverScaleDepth * (terrain.radius - sampleHeight));
@@ -83,14 +87,21 @@ public class ScatteringEquations {
                         double forwardScatter = (startOffset +
                                 cameraDepth * (scale(lightAngle) - scale(cameraAngle)));
 
-                        Vector3d outScattering = exp(
+                        Vector3d lightToAttenuate = Scale(Add(Scale(InvWavelength, Kr4Pi), Km4pi), -forwardScatter);
+
+                        Vector3d addedLight = new Vector3d(
+                                exp(lightToAttenuate.x),
+                                exp(lightToAttenuate.y),
+                                exp(lightToAttenuate.z));
+                        return Scale(addedLight, depth * scaledLength);
                     }
                 },
-                startPoint, endPoint, samplesPerOutScatterRay
+                startPoint, endPoint, scaledLength, samplesPerOutScatterRay
         );
-
+        return myColor;
     }
 
+    /*
     public static double OpticalDepth(Vector3d A, Vector3d B) {
         return Integrals.estimateIntegral(
                 new Function() {
@@ -103,7 +114,7 @@ public class ScatteringEquations {
                 },
                 A, B, samplesPerOutScatterRay
         );
-    }
+    }*/
 
 
     /**

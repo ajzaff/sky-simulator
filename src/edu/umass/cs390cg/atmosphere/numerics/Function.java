@@ -1,7 +1,9 @@
 package edu.umass.cs390cg.atmosphere.numerics;
 
+import javax.vecmath.Vector3d;
+
 public interface Function {
-  double evaluate(Object[] args);
+   Vector3d evaluate(Object[] args);
 }
 
 /*

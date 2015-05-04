@@ -32,6 +32,13 @@ public class Vec {
                 a.z + b.z);
     }
 
+    public static Vector3d Add(Vector3d a, double b){
+        return new Vector3d(
+                a.x + b,
+                a.y + b,
+                a.z + b);
+    }
+
     public static Vector3d Subtract(Vector3d a, Vector3d b) {
         return new Vector3d(
                 a.x - b.x,
