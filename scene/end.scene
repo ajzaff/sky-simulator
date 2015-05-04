@@ -7,7 +7,7 @@ scene.output    test.png
 camera.gaze  1 -1 1
 camera.up   0 1 0
 camera.eye  0 200.1 0
-camera.fov  140
+camera.fov  160
 
 # sky features
 sky.color   0 .7 .93
@@ -20,16 +20,15 @@ terrain.center  0 0 0
 terrain.radius  200
 
 # sun features
-sun.direction 1 0 1
+sun.direction 1 -1 1
 sun.color  150 150 150
 
 # material
 material.name ground
 material.type specular
-material.ka .3 .7 .2
+material.ka 0.6 0.46 0.32
 material.kd 1.0 0.2 0.2
-# material.ks .1 .2 .1
+material.ks 0.6 0.6 0.6
 material.phong 20.0
-material.noise 0.5 1 0
 material.send
 
