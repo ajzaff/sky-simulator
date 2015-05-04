@@ -6,8 +6,8 @@ scene.output    test.png
 # camera location
 camera.gaze  1 -1 1
 camera.up   0 1 0
-camera.eye  4 200.1 4
-camera.fov  90
+camera.eye  0 200.1 0
+camera.fov  140
 
 # sky features
 sky.color   0 .7 .93
@@ -31,4 +31,3 @@ material.kd 1.0 0.2 0.2
 material.ks 0.6 0.6 0.6
 material.phong 20.0
 material.send
-

@@ -47,8 +47,6 @@ public class Scene {
     return best;
   }
 
-
-
   public HitRecord intersectSky(Ray ray) {
     return sky.hit(ray, .001d, 10000000d);
   }
