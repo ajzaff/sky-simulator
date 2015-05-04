@@ -10,6 +10,7 @@ import javax.vecmath.Vector3d;
 import java.net.SecureCacheResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class RayTracer {
 
@@ -97,10 +98,24 @@ public class RayTracer {
       return scene.sky.calculateShading(ray, hit);
     }
     else {
+      /*
       //double depth = ScatteringEquations.GetLinearDepth(ray.o, hit.pos)
       //return new Vector3d(depth, depth, depth);
       return scene.terrain.calculateShading(ray, hit);
       //return scene.terrain.color;
+       */
+
+      Ray newRay = new Ray(hit.pos, scene.sun.d);
+      HitRecord newHit = scene.intersectScene(newRay);
+
+      if(newHit.type == HitRecord.HitType.TYPE_TERRAIN) {
+        return new Vector3d();
+      }
+
+      Random r = new Random();
+      double d = r.nextDouble() / 2 + .5;
+      Vector3d x = scene.terrain.color;
+      return new Vector3d(x.x*d,x.y*d,x.z*d);
     }
   }
 }

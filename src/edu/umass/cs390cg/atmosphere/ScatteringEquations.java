@@ -288,6 +288,7 @@ public class ScatteringEquations {
     }
 
 
+
     private static double GetOutscatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower) {
         return 4 * PI * GetK(KConstant, wavelength, KPower) * OpticalDepth(A, B);
     }
