@@ -10,14 +10,14 @@ public final class Integrals {
     /**
      * Estimates the integral of a function from A to B.
      *
-     * @param function a function.
+     * @param f a function.
      * @param A        a starting point.
      * @param B        a finishing point.
      * @param n        a number of points [1,)
      * @return the value of the integral.
      */
     public static Vector3d estimateIntegral(
-            Function function,
+            Function f,
             Vector3d A,
             Vector3d B,
             double scale,
@@ -35,7 +35,7 @@ public final class Integrals {
         for (t = 0; t <= 1; t += segmentLength) {
             args = new Object[]{ray.pointAt(t + segmentLength / 2)};
             result = Vec.Add(
-                        Vec.Scale(function.evaluate(args), segmentLength * scale),
+                        Vec.Scale(f.evaluate(args), segmentLength * scale),
                         result);
         }
 
