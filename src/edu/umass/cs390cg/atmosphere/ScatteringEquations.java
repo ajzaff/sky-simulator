@@ -9,6 +9,7 @@ import edu.umass.cs390cg.atmosphere.numerics.Function;
 import edu.umass.cs390cg.atmosphere.numerics.Integrals;
 
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
@@ -55,10 +56,6 @@ public class ScatteringEquations {
         return scaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
     }
 
-    public Vector3d InScatter(Ray ray, HitRecord hit){
-        Vector3d totalLight = GetRawScatter(ray, hit);
-        Vector3d RayleighLight Scale(totalLight, RayleighPhaseFunction())
-    }
 
     public Vector3d GetRawScatter(Ray ray, HitRecord hit) {
         double rayLength = Subtract(hit.pos, ray.o).length();
@@ -102,7 +99,10 @@ public class ScatteringEquations {
                 },
                 startPoint, endPoint, scaledLength, samplesPerOutScatterRay
         );
-        return Scale(myColor, r.scene.sun.color);
+        myColor = Scale(myColor, r.scene.sun.color);
+        Vector3d RayleighColor = Scale(Scale(Scale(myColor, InvWavelength), Kr), RayleighPhaseFunction(startAngle));
+        Vector3d MieColor = Scale(Scale(myColor, Km), MiePhaseFunction(startAngle, Mie_G));
+        return Add(RayleighColor, MieColor);
     }
 
     //region Phase (theta, g)
