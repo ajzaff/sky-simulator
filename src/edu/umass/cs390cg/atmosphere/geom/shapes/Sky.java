@@ -11,10 +11,12 @@ public class Sky extends Sphere {
   public static double lowestHeight = 10000d;
 
   public Vector3d calculateShading(Ray ray, HitRecord hit) {
-
-    Vector3d v3 = ScatteringEquations.GetInScatter(ray, hit);
-    //return new Color3f(depth, depth, depth);
-    //return ScatteringEquations.InScatterAmount(ray, hit);
+    //System.out.println("Hit at " + hit.pos);
+    double height = ScatteringEquations.height(hit.pos);
+    if (height < 200d || height > 210d) {
+      System.out.println("Height is really " + height);
+    }
+    Vector3d v3 = ScatteringEquations.GetLightRays(ray, hit);
     return v3;
 
   }

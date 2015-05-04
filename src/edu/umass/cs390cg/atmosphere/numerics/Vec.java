@@ -50,6 +50,9 @@ public class Vec {
         return new Vector3d(-r.x, -r.y, -r.z);
     }
 
+
+
+    /*
     public static double getDeterminent(Vector3d a, Vector3d b, Vector3d c) {
         return a.x * b.y * c.z +
                 b.x * c.y * a.z +
@@ -58,7 +61,7 @@ public class Vec {
                 a.z * b.y * c.x -
                 b.z * c.y * a.x -
                 c.z * a.y * b.x;
-    }
+    }*/
     // endregion
 
     //region Color functions

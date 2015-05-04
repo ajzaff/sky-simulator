@@ -12,6 +12,7 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import java.security.KeyPair;
+import java.util.Vector;
 
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
@@ -30,6 +31,7 @@ public class ScatteringEquations {
     public static double scaleDepth = 0.25d; // Depth of average atmospheric density, 0.25
     public static double scaleOverScaleDepth;
 
+    public static double exposure = 2d;
     public static double Kr = 0.0025d;
     public static double Km = 0.0015d;
     public static final double Mie_G = -.8d;
@@ -48,7 +50,59 @@ public class ScatteringEquations {
 
     //endregion
 
-    public static double OpticalDepth(Vector3d A, Vector3d B) {
+    public static Vector3d GetLightRays(Ray ray, HitRecord hit){
+        Vector3d A = ray.o;
+        Vector3d B = hit.pos;
+
+        Vector3d RayleighColor = new Vector3d(
+                InScatter(A, B, Kr, Wavelength.x, 4d, 0),
+                InScatter(A, B, Kr, Wavelength.y, 4d, 0),
+                InScatter(A, B, Kr, Wavelength.z, 4d, 0));//*/
+        //Vector3d RayleighColor = new Vector3d();
+        Vector3d MieColor = new Vector3d(
+                InScatter(A, B, Km, Wavelength.x, 0.84d, Mie_G),
+                InScatter(A, B, Km, Wavelength.y, 0.84d, Mie_G),
+                InScatter(A, B, Km, Wavelength.z, 0.84d, Mie_G));
+        return Scale(r.scene.sun.color, Add(RayleighColor, MieColor));
+    }
+
+
+    private static double InScatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower, double G) {
+        Vector3d dir = Subtract(B, A);
+        double sampleLength = dir.length() / samplesPerInScatterRay;
+        double scaledLength = sampleLength * scale;
+        dir.normalize();
+        dir.scale(sampleLength);
+
+        Vector3d samplePoint = Add(A, Scale(dir, 0.5d));
+
+        double InscatterIntegral = 0d;
+        for (int n = 0; n < samplesPerOutScatterRay; n++) {
+
+            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint)));
+
+            Vector3d PointToSun = r.scene.intersectSky(new Ray(samplePoint, r.scene.sun.d)).pos;
+
+            double outscatter = exp(
+                    -1d * GetOutscatter(samplePoint, PointToSun, KConstant, wavelength, KPower) -
+                            GetOutscatter(samplePoint, A, KConstant, wavelength, KPower));
+
+            InscatterIntegral += density * outscatter * scaledLength;
+            samplePoint = Add(samplePoint, dir);
+        }
+
+
+        // cos = lightDir dot ldir
+        //TODO Ensure this is correct
+        Vector3d ScatterRayTowardsCamera = Subtract(A, B);
+        double cos = ScatterRayTowardsCamera.dot(r.scene.sun.d) / ScatterRayTowardsCamera.length();
+        //System.out.println("Cosine of angle is " + cos);
+
+        double Coefficients = GetK(KConstant, wavelength, KPower) * Phase(cos, G);
+        return InscatterIntegral * Coefficients;
+    }
+
+    private static double OpticalDepth(Vector3d A, Vector3d B) {
         Vector3d dir = Subtract(B, A);
         double sampleLength = dir.length() / samplesPerOutScatterRay;
         double scaledLength = sampleLength * scale;
@@ -76,60 +130,15 @@ public class ScatteringEquations {
      */
     public static double height(Vector3d pos) {
         double height = pos.length();
-        if (height < terrain.radius || height > sky.radius) {
+        if (height < terrain.radius || height > sky.radius + 0.1) {
 
-            System.out.println("Height function broken, given value out of range");
-            System.out.println(height + " height, pos = " + pos);
+            System.out.println("Height is actually " + height + " at " + pos);
         }
         return height;
     }
 
-    public static Vector3d GetLightRays(Ray ray, HitRecord hit){
-        Vector3d A = ray.o;
-        Vector3d B = hit.pos;
-
-        Vector3d RayleighColor = new Vector3d(
-                InScatter(A, B, Kr, Wavelength.x, 4, 0),
-                InScatter(A, B, Kr, Wavelength.y, 4, 0),
-                InScatter(A, B, Kr, Wavelength.z, 4, 0));
-        Vector3d MieColor = new Vector3d(
-                InScatter(A, B, Km, Wavelength.x, 0.84d, 0),
-                InScatter(A, B, Km, Wavelength.y, 0.84d, 0),
-                InScatter(A, B, Km, Wavelength.z, 0.84d, 0));
-        return Add(RayleighColor, MieColor);
-    }
-
-    private static double InScatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower, double G) {
-        Vector3d dir = Subtract(B, A);
-        double sampleLength = dir.length() / samplesPerInScatterRay;
-        double scaledLength = sampleLength * scale;
-        dir.normalize();
-        dir.scale(sampleLength);
-
-        Vector3d samplePoint = Add(A, Scale(dir, 0.5d));
-
-        double InscatterIntegral = 0d;
-        for (int n = 0; n < samplesPerOutScatterRay; n++) {
-
-            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint)));
-            Vector3d Pc = new Vector3d();
-            double outscatter = exp(
-                    -1d * GetOutscatter(samplePoint, Pc, KConstant, wavelength, KPower) -
-                            GetOutscatter(samplePoint, A, KConstant, wavelength, KPower));
-
-            InscatterIntegral += density * outscatter * scaledLength;
-            samplePoint = Add(samplePoint, dir);
-        }
 
 
-        // cos = lightDir dot ldir
-        Vector3d ScatterRayTowardsCamera = Subtract(A, B);
-        double cos = ScatterRayTowardsCamera.dot(r.scene.sun.d) / ScatterRayTowardsCamera.length();
-        System.out.println("Cosine of angle is " + cos);
-
-        double Coefficients = GetK(KConstant, wavelength, KPower) * Phase(cos, G);
-        return InscatterIntegral * Coefficients;
-    }
 
     private static double Phase(double cos, double g){
         double gg = g * g;
@@ -153,6 +162,15 @@ public class ScatteringEquations {
     public static Vector3d cosOfVectorsNormalized(Vector3d A, Vector3d B) {
         double value = (A.dot(B) / 2d) + 0.5d;
         return new Vector3d(value, value, value);
+    }
+
+    public static Vector3d ExposureCorrection(Vector3d color){
+        // 1 - exp(-exp * color)
+        return new Vector3d(
+                1d - exp(color.x * -exposure),
+                1d - exp(color.y * -exposure),
+                1d - exp(color.z * -exposure));
+
     }
 
     //region OldCode
