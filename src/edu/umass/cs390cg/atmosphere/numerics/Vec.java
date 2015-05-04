@@ -11,6 +11,12 @@ public class Vec {
                 a.y * scale,
                 a.z * scale);
     }
+    public static Vector3d Scale(Vector3d a, Vector3d b) {
+        return new Vector3d(
+                a.x * b.x,
+                a.y * b.y,
+                a.z * b.z);
+    }
 
     public static Vector3d Pointwise(Vector3d a, Vector3d b) {
         return new Vector3d(

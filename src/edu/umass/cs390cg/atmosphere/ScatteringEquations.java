@@ -5,10 +5,13 @@ import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
+import edu.umass.cs390cg.atmosphere.numerics.Function;
+import edu.umass.cs390cg.atmosphere.numerics.Integrals;
 
 import javax.vecmath.Vector3d;
+import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
-import static edu.umass.cs390cg.atmosphere.numerics.Vec.Subtract;
+import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
 import static java.lang.Math.exp;
 
 public class ScatteringEquations {
@@ -46,6 +49,7 @@ public class ScatteringEquations {
         return scaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
     }
 
+
     public Vector3d Scatter(Ray ray, HitRecord hit) {
         double rayLength = Subtract(hit.pos, ray.o).length();
 
@@ -65,6 +69,25 @@ public class ScatteringEquations {
 
 
         Vector3d myColor = new Vector3d();
+
+        Integrals.estimateIntegral(
+                new Function() {
+                    @Override
+                    public double evaluate(Object[] args) {
+                        Vector3d v = (Vector3d) args[0];
+                        double sampleHeight = height(v);
+                        double depth = exp(scaleOverScaleDepth * (terrain.radius - sampleHeight));
+                        double lightAngle = v.dot(r.scene.sun.d) / sampleHeight;
+                        double cameraAngle = v.dot(ray.d) / sampleHeight;
+
+                        double forwardScatter = (startOffset +
+                                cameraDepth * (scale(lightAngle) - scale(cameraAngle)));
+
+                        Vector3d outScattering = exp(
+                    }
+                },
+                startPoint, endPoint, samplesPerOutScatterRay
+        );
 
     }
 
