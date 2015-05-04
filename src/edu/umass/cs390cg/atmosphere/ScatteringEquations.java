@@ -20,8 +20,8 @@ public class ScatteringEquations {
 
   //region Declarations
 
-  public static int samplesPerInScatterRay = 10;
-  public static int samplesPerOutScatterRay = 50;
+  public static int samplesPerInScatterRay = 1000;
+  public static int samplesPerOutScatterRay = 1000;
   public static Sky sky;
   public static Terrain terrain;
   public static double scale; // 1 / (Outer radius - inner radius)

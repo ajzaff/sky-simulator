@@ -85,10 +85,9 @@ public class RayTracer {
     HitRecord hit = scene.intersectScene(ray);
     if(hit == null) return new Vector3d();
     else if(hit.type == HitRecord.HitType.TYPE_SKY) {
-      return new Vector3d(0,0,1);//scene.sky.calculateShading(ray, hit);
+      return scene.sky.calculateShading(ray, hit);
     }
     else {
-      System.out.println(scene.terrain.color);
       //return new Color3f();
       return scene.terrain.color;
     }

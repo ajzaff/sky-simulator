@@ -27,12 +27,6 @@ public class Scene {
     HitRecord r, best = null;
     double tMin = Double.MAX_VALUE;
 
-    r=intersectTerrain(ray);
-    if (r != null && r.t < tMin) {
-      best = r;
-      best.type = HitRecord.HitType.TYPE_TERRAIN;
-    }
-
     // If there is a terrain intersection there is no need to check for sky collision
     r=intersectSky(ray);
     if(r != null && r.t < tMin) {
@@ -41,13 +35,19 @@ public class Scene {
       tMin = r.t;
     }
 
+    r=intersectTerrain(ray);
+    if (r != null && r.t < tMin) {
+      best = r;
+      best.type = HitRecord.HitType.TYPE_TERRAIN;
+    }
+
     return best;
   }
 
 
 
   public HitRecord intersectSky(Ray ray) {
-    return sky.hit(ray, .001f, 0xffffff);
+    return sky.hit(ray, .001d, 10000000d);
   }
 
   public HitRecord intersectTerrain(Ray ray) {
