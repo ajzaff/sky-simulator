@@ -47,10 +47,6 @@ public class SceneParser {
       offset += PROPERTY_SCENE_OUTPUT.length();
       scene.output = line.substring(offset).trim();
     }
-    else if(line.startsWith(PROPERTY_SKY_COLOR)) {
-      offset += PROPERTY_SKY_COLOR.length();
-      scene.sky.color = consumeVector(line);
-    }
     else if(line.startsWith(PROPERTY_SKY_CENTER)) {
       offset += PROPERTY_SKY_CENTER.length();
       scene.sky.center = consumeVector(line);

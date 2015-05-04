@@ -91,9 +91,15 @@ public class RayTracer {
 
       //return ScatteringEquations.cosOfVectorsNormalized(ray.d, scene.sun.d);
       return scene.sky.calculateShading(ray, hit);
+
+      //double t = new Vector3d(ray.d).dot(r.scene.sun.d);
+      //return new Vector3d(t,t,t);
     }
     else {
-      //return new Color3f();
+
+      /*Ray newRay = new Ray(hit.pos, r.scene.sun.d);
+      HitRecord newHit = scene.intersectScene(newRay);*/
+
       return scene.terrain.color;
     }
   }

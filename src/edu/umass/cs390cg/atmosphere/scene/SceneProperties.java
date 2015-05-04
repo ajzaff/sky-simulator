@@ -4,7 +4,6 @@ public final class SceneProperties {
   public static final String PROPERTY_SCENE_WIDTH = "scene.width";
   public static final String PROPERTY_SCENE_HEIGHT = "scene.height";
   public static final String PROPERTY_SCENE_OUTPUT = "scene.output";
-  public static final String PROPERTY_SKY_COLOR = "sky.color";
   public static final String PROPERTY_SKY_CENTER = "sky.center";
   public static final String PROPERTY_SKY_RADIUS = "sky.radius";
   public static final String PROPERTY_TERRAIN_COLOR = "terrain.color";

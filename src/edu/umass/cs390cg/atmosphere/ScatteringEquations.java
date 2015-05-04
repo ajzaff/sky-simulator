@@ -25,14 +25,14 @@ public class ScatteringEquations {
     public static Sky sky;
     public static Terrain terrain;
     public static double scale; // 1 / (Outer radius - inner radius)
-    public static double scaleDepth = 0.25d; // Depth of average atmospheric density, 0.25
+    public static double scaleDepth = .25d; // Depth of average atmospheric density, 0.25
     public static double scaleOverScaleDepth;
 
     public static double Kr = 0.0025d;
     public static double Km = 0.0015d;
     public static double Kr4Pi = Kr * 4 * PI;
     public static double Km4pi = Km * 4 * PI;
-    public static double ESun = 150.d;
+    public static double ESun = 250.d;
     public static double KrESun = Kr*ESun;
     public static double KmESun = Km*ESun;
 
@@ -114,7 +114,7 @@ public class ScatteringEquations {
 
         double cos = r.scene.sun.d.dot(ray.d);
 
-        System.out.println("cosine is " + cos);
+        //System.out.println("cosine is " + cos);
 
         Vector3d RayleighColor = Scale(Scale(Scale(myColor, InvWavelength), KrESun), RayleighPhaseFunction(startAngle));
         Vector3d MieColor = Scale(Scale(myColor, KmESun), MiePhaseFunction(startAngle, Mie_G));
