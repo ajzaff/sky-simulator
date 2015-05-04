@@ -32,8 +32,9 @@ public class ScatteringEquations {
     public static double Km = 0.0015d;
     public static double Kr4Pi = Kr * 4 * PI;
     public static double Km4pi = Km * 4 * PI;
-    public static double KrESun = 0.0000025d * 10;
-    public static double KmESun = 0.00015d * 10;
+    public static double ESun = 150.d;
+    public static double KrESun = Kr*ESun;
+    public static double KmESun = Km*ESun;
 
     public static final double Mie_G = -.8d;
     public static double KMie = 0.0015d;
@@ -64,53 +65,59 @@ public class ScatteringEquations {
     }
 
 
-
     public static Vector3d GetInScatter(final Ray ray, HitRecord hit) {
 
-        double rayLength = Subtract(hit.pos, ray.o).length();
+        double rayLength = Subtract(hit.pos, ray.o).length(); // good
+        double sampleLength = rayLength / samplesPerInScatterRay; // good
 
-        Vector3d startPoint = ray.o;
-        Vector3d endPoint = hit.pos;
-        double cameraHeight = height(startPoint);
-        final double cameraDepth = exp(scaleOverScaleDepth * (terrain.radius - cameraHeight));
+        Vector3d startPoint = ray.o; // good
+        Vector3d endPoint = hit.pos; // good
 
-        final double startAngle = ray.d.dot(startPoint) / cameraHeight;
-        final double startOffset = cameraDepth * scale(startAngle);
+        double cameraHeight = height(startPoint); // good
+        final double cameraDepth = exp(scaleOverScaleDepth * (terrain.radius - cameraHeight));//good
 
-        double sampleLength = rayLength / samplesPerInScatterRay;
-        final double scaledLength = sampleLength * scale;
-
-        Vector3d RaySegment = Scale(ray.d, sampleLength);
-        Vector3d SamplePoint = Add(startPoint, Scale(RaySegment, 0.5d));
+        final double startAngle = ray.d.dot(startPoint) / cameraHeight; // good?
+        final double startOffset = cameraDepth * scale(startAngle); // good
 
 
         Vector3d myColor = Integrals.estimateIntegral(
                 new Function() {
                     @Override
                     public Vector3d evaluate(Object[] args) {
-                        Vector3d v = (Vector3d) args[0];
-                        double sampleHeight = height(v);
-                        double depth = exp(scaleOverScaleDepth * (terrain.radius - sampleHeight));
-                        double lightAngle = v.dot(r.scene.sun.d) / sampleHeight;
-                        double cameraAngle = v.dot(ray.d) / sampleHeight;
+
+                        Vector3d samplePoint = (Vector3d) args[0];
+                        double sampleHeight = height(samplePoint);
+                        double sampleDepth = exp(scaleOverScaleDepth * (terrain.radius - sampleHeight));
+                        double lightAngle = samplePoint.dot(r.scene.sun.d) / sampleHeight;
+                        double cameraAngle = samplePoint.dot(ray.d) / sampleHeight;
 
                         double forwardScatter = (startOffset +
-                                cameraDepth * (scale(lightAngle) - scale(cameraAngle)));
+                                sampleDepth * (scale(lightAngle) - scale(cameraAngle)));
 
-                        Vector3d lightToAttenuate = Scale(Add(Scale(InvWavelength, Kr4Pi), Km4pi), -forwardScatter);
+
+                        Vector3d lightToAttenuate =
+                                Scale(
+                                    Add(
+                                        Scale(InvWavelength, Kr4Pi),
+                                        Km4pi),
+                                -forwardScatter);
 
                         Vector3d addedLight = new Vector3d(
                                 exp(lightToAttenuate.x),
                                 exp(lightToAttenuate.y),
                                 exp(lightToAttenuate.z));
-                        return Scale(addedLight, depth);
+                        return Scale(addedLight, sampleDepth);
                     }
                 },
                 startPoint, endPoint, scale, samplesPerOutScatterRay
         );
-        myColor = Scale(myColor, r.scene.sun.color);
-        Vector3d RayleighColor = Scale(Scale(Scale(myColor, InvWavelength), Kr), RayleighPhaseFunction(startAngle));
-        Vector3d MieColor = Scale(Scale(myColor, Km), MiePhaseFunction(startAngle, Mie_G));
+
+        double cos = r.scene.sun.d.dot(ray.d);
+
+        System.out.println("cosine is " + cos);
+
+        Vector3d RayleighColor = Scale(Scale(Scale(myColor, InvWavelength), KrESun), RayleighPhaseFunction(startAngle));
+        Vector3d MieColor = Scale(Scale(myColor, KmESun), MiePhaseFunction(startAngle, Mie_G));
         return Add(RayleighColor, MieColor);
     }
 

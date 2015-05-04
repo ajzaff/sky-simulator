@@ -89,8 +89,8 @@ public class RayTracer {
     if(hit == null) return new Vector3d();
     else if(hit.type == HitRecord.HitType.TYPE_SKY) {
 
-      return ScatteringEquations.cosOfVectorsNormalized(ray.d, scene.sun.d);
-      //return scene.sky.calculateShading(ray, hit);
+      //return ScatteringEquations.cosOfVectorsNormalized(ray.d, scene.sun.d);
+      return scene.sky.calculateShading(ray, hit);
     }
     else {
       //return new Color3f();
