@@ -98,9 +98,24 @@ public class RayTracer {
     else {
 
       /*Ray newRay = new Ray(hit.pos, r.scene.sun.d);
-      HitRecord newHit = scene.intersectScene(newRay);*/
+      HitRecord newHit = scene.intersectScene(newRay);
 
-      return scene.terrain.color;
+      if(newHit.type == HitRecord.HitType.TYPE_TERRAIN) {
+        return new Vector3d();
+      }
+
+      Vector3d x = new Vector3d(scene.terrain.color);
+      double t = hit.t;
+      return new Vector3d(x.x*t,x.y*t,x.z*t);*/
+
+      double x = Math.round(hit.pos.x % .1);
+      double z = Math.round(hit.pos.z % .1);
+      double c = x == z? 1 : 0;
+
+      System.out.println(x + " " + z);
+
+      return new Vector3d(0, 0, 0);
+
     }
   }
 }
