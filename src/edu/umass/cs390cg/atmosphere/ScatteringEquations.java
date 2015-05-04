@@ -13,8 +13,7 @@ import javax.vecmath.Vector3d;
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
 import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
-import static java.lang.Math.PI;
-import static java.lang.Math.exp;
+import static java.lang.Math.*;
 
 public class ScatteringEquations {
 
@@ -56,7 +55,12 @@ public class ScatteringEquations {
         return scaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
     }
 
-    public Vector3d Scatter(Ray ray, HitRecord hit) {
+    public Vector3d InScatter(Ray ray, HitRecord hit){
+        Vector3d totalLight = GetRawScatter(ray, hit);
+        Vector3d RayleighLight Scale(totalLight, RayleighPhaseFunction())
+    }
+
+    public Vector3d GetRawScatter(Ray ray, HitRecord hit) {
         double rayLength = Subtract(hit.pos, ray.o).length();
 
         Vector3d startPoint = ray.o;
@@ -98,8 +102,45 @@ public class ScatteringEquations {
                 },
                 startPoint, endPoint, scaledLength, samplesPerOutScatterRay
         );
-        return myColor;
+        return Scale(myColor, r.scene.sun.color);
     }
+
+    //region Phase (theta, g)
+
+    /**
+     * This calculates how much light is scattered in the
+     * direction of the camera
+     *
+     * @param theta is the angle between two rays
+     *              where g=0 results in symmetrical Rayleigh scattering
+     *              and -.999 < g < -.75 results in Mie aerosol scattering
+     * @return
+     */
+    public static double RayleighPhaseFunction(double theta) {
+        return (3d / 4 * (1 + cos(theta)));
+    }
+
+    /**
+     * This calculates how much light is scattered in the
+     * direction of the camera
+     *
+     * @param theta is the angle between two rays
+     * @param g     affects the symmetry of scattering
+     *              where g=0 results in symmetrical Rayleigh scattering
+     *              and -.999 < g < -.75 results in Mie aerosol scattering
+     * @return
+     */
+    public static double MiePhaseFunction(float theta, float g) {
+        double cos_theta, gg;
+
+        cos_theta = cos(theta);
+        gg = g * g;
+
+        return (3 * (1 - gg)) / (2 * (2 + gg)) *
+                (1 + cos_theta * cos_theta) /
+                pow(1 + gg - 2 * g * cos_theta, 3d / 2);
+    }
+    //endregion
 
     /*
     public static double OpticalDepth(Vector3d A, Vector3d B) {
