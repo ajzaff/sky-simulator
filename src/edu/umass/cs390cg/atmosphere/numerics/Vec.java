@@ -2,6 +2,8 @@ package edu.umass.cs390cg.atmosphere.numerics;
 
 import javax.vecmath.Vector3d;
 
+import static java.lang.Math.exp;
+
 public class Vec {
 
     //region Vector Functions
@@ -12,13 +14,6 @@ public class Vec {
                 a.z * scale);
     }
     public static Vector3d Scale(Vector3d a, Vector3d b) {
-        return new Vector3d(
-                a.x * b.x,
-                a.y * b.y,
-                a.z * b.z);
-    }
-
-    public static Vector3d Pointwise(Vector3d a, Vector3d b) {
         return new Vector3d(
                 a.x * b.x,
                 a.y * b.y,
@@ -98,6 +93,17 @@ public class Vec {
             return false;
         else
             return true;
+    }
+
+    public static double GetVectorCos(Vector3d A, Vector3d B) {
+        return A.dot(B);
+    }
+
+    public static Vector3d VecExponent(Vector3d V) {
+        return new Vector3d(
+                exp(V.x),
+                exp(V.y),
+                exp(V.z));
     }
 
 

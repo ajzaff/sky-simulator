@@ -68,6 +68,8 @@ public class ScatteringEquations {
 
     //endregion
 
+    //region Surface Functions
+
     public static Vector3d GetLightFromSurface(Ray ray, HitRecord hit) {
         Vector3d A = ray.o;
         Vector3d B = hit.pos;
@@ -81,7 +83,6 @@ public class ScatteringEquations {
         // Ie * outscattering
         return Scale(IEmitted, outScatterToCamera);
     }
-
 
     // Shades a point given the ray. Uses spec, diffuse, ambient, reflection and refraction sources
     // These vectors must be normalized.
@@ -172,6 +173,9 @@ public class ScatteringEquations {
         return Scale(r.scene.sun.color, Add(RayleighColor, MieColor));
     }
 
+    //endregion
+
+    //region Scatter Functions
 
     private static double InScatter(Vector3d CameraPoint, Vector3d B, double KConstant, double wavelength, double KPower, double G) {
         Vector3d dir = Subtract(B, CameraPoint);
@@ -204,6 +208,7 @@ public class ScatteringEquations {
         ScatterRayTowardsCamera.normalize();
 
         //V1 dot v2 when both are normalized
+
         double cos = GetVectorCos(ScatterRayTowardsCamera, r.scene.sun.d);
         if (!isCloseEnough(1d, r.scene.sun.d.length() * ScatterRayTowardsCamera.length(), 0.01)) //debugger
             System.out.println("Angle rays aren't normalized, is " + r.scene.sun.d.length() * ScatterRayTowardsCamera.length());
@@ -213,6 +218,27 @@ public class ScatteringEquations {
         return InscatterIntegral * Coefficients;
     }
 
+    public static Vector3d GetAllOutScatter(Vector3d A, Vector3d B) {
+        Vector3d RayleighOutScatter = new Vector3d(
+                GetOutscatter(A, B, Kr, Wavelength.x, 4),
+                GetOutscatter(A, B, Kr, Wavelength.y, 4),
+                GetOutscatter(A, B, Kr, Wavelength.z, 4));
+
+        Vector3d MieOutScatter = new Vector3d(
+                GetOutscatter(A, B, Km, Wavelength.x, 0.84d),
+                GetOutscatter(A, B, Km, Wavelength.y, 0.84d),
+                GetOutscatter(A, B, Km, Wavelength.z, 0.84d));
+
+        return Add(RayleighOutScatter, MieOutScatter);
+    }
+
+    private static double GetOutscatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower) {
+        return 4 * PI * GetK(KConstant, wavelength, KPower) * OpticalDepth(A, B);
+    }
+
+    //endregion
+
+    //region Helper Functions
     public static double GetLinearDepth(Vector3d A, Vector3d B) {
         return Subtract(A, B).length();
     }
@@ -279,37 +305,9 @@ public class ScatteringEquations {
                 pow(1 + gg - 2 * g * cos, 3d / 2);
     }
 
-    private static double GetVectorCos(Vector3d A, Vector3d B) {
-        return A.dot(B);
-    }
 
     private static double GetK(double KCOnstant, double wavelength, double KPower) {
         return KCOnstant / (pow(wavelength, KPower));
-    }
-
-
-
-    private static double GetOutscatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower) {
-        return 4 * PI * GetK(KConstant, wavelength, KPower) * OpticalDepth(A, B);
-    }
-
-    public static Vector3d GetAllOutScatter(Vector3d A, Vector3d B) {
-        Vector3d RayleighOutScatter = new Vector3d(
-                GetOutscatter(A, B, Kr, Wavelength.x, 4),
-                GetOutscatter(A, B, Kr, Wavelength.y, 4),
-                GetOutscatter(A, B, Kr, Wavelength.z, 4));
-
-        Vector3d MieOutScatter = new Vector3d(
-                GetOutscatter(A, B, Km, Wavelength.x, 0.84d),
-                GetOutscatter(A, B, Km, Wavelength.y, 0.84d),
-                GetOutscatter(A, B, Km, Wavelength.z, 0.84d));
-
-        return Add(RayleighOutScatter, MieOutScatter);
-    }
-
-    public static Vector3d cosOfVectorsNormalized(Vector3d A, Vector3d B) {
-        double value = (A.dot(B) / 2d) + 0.5d;
-        return new Vector3d(value, value, value);
     }
 
     public static Vector3d ExposureCorrection(Vector3d color) {
@@ -320,12 +318,7 @@ public class ScatteringEquations {
                 1d - exp(color.z * -exposure));
     }
 
-    public static Vector3d VecExponent(Vector3d V) {
-        return new Vector3d(
-                exp(V.x),
-                exp(V.y),
-                exp(V.z));
-    }
+    //endregion
 
     //region OldCode
     /*
