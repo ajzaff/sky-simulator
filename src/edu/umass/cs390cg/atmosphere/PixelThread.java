@@ -1,9 +1,13 @@
 package edu.umass.cs390cg.atmosphere;
 
+
+import edu.umass.cs390cg.atmosphere.ScatteringEquations;
 import edu.umass.cs390cg.atmosphere.numerics.Vec;
 
 import javax.vecmath.Vector3d;
 import java.util.Random;
+
+import static edu.umass.cs390cg.atmosphere.ScatteringEquations.GetRayColor;
 
 public class PixelThread implements Runnable{
 	static Vector3d[][] dest;
@@ -11,7 +15,6 @@ public class PixelThread implements Runnable{
 	static Camera camera;
 	static RayTracer tracer;
 	static int samples = 1;
-	static Random rand = new Random();
 	private int y;
 	
 	public PixelThread(int y){
@@ -35,11 +38,9 @@ public class PixelThread implements Runnable{
 			// Make samples and average the color
 			Vector3d pixelColor = new Vector3d();
 			for(int s = 0; s < samples;s++){
-				double xJitter = rand.nextDouble()*xJitRange;
-				double yJitter = rand.nextDouble()*yJitRange;
-				Vector3d color = tracer.trace(
-						camera.getCameraRay(xAmt + xJitter, yAmt + yJitter));
-								
+				double xJitter = Vec.rand.nextDouble()*xJitRange;
+				double yJitter = Vec.rand.nextDouble()*yJitRange;
+				Vector3d color = GetRayColor(camera.getCameraRay(xAmt + xJitter, yAmt + yJitter), 1);
 				pixelColor.add(color);
 			}
 
@@ -48,3 +49,4 @@ public class PixelThread implements Runnable{
 	}
 
 }
+;

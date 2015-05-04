@@ -8,7 +8,6 @@ import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 
 import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
-import javax.vecmath.Vector3f;
 
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
@@ -18,8 +17,12 @@ import static java.lang.Math.*;
 public class ScatteringEquations {
 
     public static boolean Debug = true;
+    public static double lscale = 0;
+
     //region Declarations
 
+    public static int MaxDepth = 5;
+    public static int skySamplesPerShadow = 1;
     public static int samplesPerInScatterRay = 10;
     public static int samplesPerOutScatterRay = 10;
     public static Sky sky;
@@ -28,13 +31,14 @@ public class ScatteringEquations {
     public static double scaleDepth = 0.25d; // Depth of average atmospheric density, 0.25
     public static double scaleOverScaleDepth;
 
-    public static double exposure = 2d;
+    public static double exposure = 1;
     public static double Kr = 0.0025d;
     public static double Km = 0.0015d;
-    public static final double Mie_G = -.8d;
+    public static final double Mie_G = -.9d;
     public static Vector3d Wavelength = new Vector3d(0.650d, 0.570d, 0.475d);
     public static Vector3d AmbientColor = new Vector3d(0.1d, 0.1d, 0.1d);
 
+    public static String UpdateName = "Depth";
     public static double LargestVal = Double.MIN_VALUE;
     public static double SmallestVal = Double.MAX_VALUE;
 
@@ -56,8 +60,8 @@ public class ScatteringEquations {
         scale = 1d / (sky.radius - terrain.radius);
         scaleOverScaleDepth = scale / scaleDepth;
 
-        Vector3d Vec1 = new Vector3d(1, 0, 0);
-        Vector3d Vec2 = new Vector3d(-1, 0, 0);
+        //Vector3d Vec1 = new Vector3d(1, 0, 0);
+        //Vector3d Vec2 = new Vector3d(-1, 0, 0);
         /*
         for(double cos = -1d; cos <= 1; cos += 0.1d)
             System.out.println("Cos " + cos + " -> " + Phase(cos, Mie_G));*///debugger
@@ -70,7 +74,36 @@ public class ScatteringEquations {
 
     //region Surface Functions
 
-    public static Vector3d GetLightFromSurface(Ray ray, HitRecord hit) {
+    public static Vector3d GetRayColor(Ray ray, int depth) {
+        Update(depth);
+        if (depth >= MaxDepth)
+            return AmbientColor;
+
+        HitRecord hit = r.scene.intersectScene(ray);
+        if (hit == null) {
+            System.out.println("Error, Null hit in RayColor with Ray " + ray);
+            return new Vector3d();
+        } else if (hit.type == HitRecord.HitType.TYPE_SKY) {
+            //return new Vector3d(1,0,0);
+            return ScatteringEquations.GetLightRays(ray, hit);
+        } else {
+            //TODO potentially add more hit types
+            // Iv + Ie*out
+            //return new Vector3d(0,1,0);
+            //return GetEmittedLight(ray, hit, depth);
+
+            //return ScatteringEquations.GetLightRays(ray, hit);
+            //return GetLightFromSurface(ray, hit, depth);
+
+            Vector3d lightScale = new Vector3d(lscale, lscale, lscale);
+
+            Vector3d atmosLight = Scale(ScatteringEquations.GetLightRays(ray, hit), lightScale);
+            return Add(atmosLight,
+                    GetLightFromSurface(ray, hit, depth));//*/
+        }
+    }
+
+    public static Vector3d GetLightFromSurface(Ray ray, HitRecord hit, int depth) {
         Vector3d A = ray.o;
         Vector3d B = hit.pos;
 
@@ -78,14 +111,61 @@ public class ScatteringEquations {
         Vector3d outScatterToCamera = VecExponent(Scale(GetAllOutScatter(A, B), -1));
 
         // Get the light before it hits the material, hit the material, then reflect towards camera
-        Vector3d IEmitted = GetEmittedLight(ray, hit);
+        Vector3d IEmitted = GetEmittedLight(ray, hit, depth);
 
         // Ie * outscattering
         return Scale(IEmitted, outScatterToCamera);
     }
 
-    // Shades a point given the ray. Uses spec, diffuse, ambient, reflection and refraction sources
-    // These vectors must be normalized.
+
+    public static Vector3d GetEmittedLight(Ray ray, HitRecord hit, int depth) {
+        // If point is in sunlight, return Is * attenuation
+        //else return ambient
+
+        /*
+
+        Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
+        HitRecord reflectHit = r.scene.intersectScene(reflectRay);
+
+        //Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit)
+
+        return Shade(GetRayColor(reflectRay, depth + 1), Negate(reflectRay.d), Negate(ray.d), hit);
+        //TODO change back light bouncing
+        */
+
+
+        HitRecord RayToSun = r.scene.intersectScene(new Ray(hit.pos, r.scene.sun.d));
+        Vector3d SunPoint = RayToSun.pos;
+        Vector3d outscatterCoefficient = VecExponent(Scale(GetAllOutScatter(hit.pos, SunPoint), -1));
+        Vector3d lightFromSun = Scale(r.scene.sun.color, outscatterCoefficient);
+        double cos = GetVectorCos(r.scene.sun.d, hit.normal);
+
+        // Reflect attenuated sunlight, Is * outscatter
+        if (RayToSun.type == HitRecord.HitType.TYPE_SKY) {
+            // exp( -t(sun, ground))
+            // Isun * outScattering
+            //return lightFromSun;
+
+            //Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
+            //return GetRayColor(reflectRay, depth + 1);
+
+            //return new Vector3d(0,1,0);
+            return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);//*/
+        }
+        // Else reflect the ray off the material and return atmospheric scattering
+        else { // If it's shadowed
+            //return Scale(Scale(hit.material.Ka, AmbientColor), hit.material.GetNoise());
+            //Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
+            //return GetRayColor(reflectRay, depth + 1);
+            //return Shade(GetRayColor(reflectRay, depth + 1), Negate(reflectRay.d), Negate(ray.d), hit);
+
+            //return new Vector3d(0,0,0);
+            lightFromSun = Scale(lightFromSun, cos);
+            return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);
+        }
+    }
+
+
     public static Vector3d Shade(Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit) {
         Vector3d color = Scale(AmbientColor, hit.material.Ka);
 
@@ -115,53 +195,7 @@ public class ScatteringEquations {
             double diffuseAmt = Math.max(0, hit.normal.dot(Negate(LightToSurface)));
             color = Add(color, Scale(Scale(lightIntensity, hit.material.Kd), diffuseAmt));
         }
-        return color;//*/
-    }
-
-    public static Vector3d GetEmittedLight(Ray ray, HitRecord hit) {
-        // If point is in sunlight, return Is * attenuation
-        //else return ambient
-
-        Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
-        HitRecord reflectHit = r.scene.intersectScene(reflectRay);
-
-        return GetAllOutScatter(hit.pos, reflectHit.pos);
-
-        /*
-
-        // The position of where the light originates from (on sky sphere, or another ground vertex)
-        Vector3d lightPos;
-
-        HitRecord RayToSun = r.scene.intersectScene(new Ray(hit.pos, r.scene.sun.d));
-
-        // If the surface has a direct line of sight with sun, reflect sunlight
-        if (RayToSun.type == HitRecord.HitType.TYPE_SKY) {
-            lightPos = RayToSun.pos;
-            // exp( -t(sun, ground))
-            Vector3d outscatterScale = VecExponent(Scale(GetAllOutScatter(hit.pos, lightPos), -1));
-            // Isun * outScattering
-            Vector3d lightFromSun = Scale(r.scene.sun.color, outscatterScale);
-
-            return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);
-        }
-        // Else reflect the ray off the material and return atmospheric scattering
-        else { // If it's shadowed
-            double cos = GetVectorCos(hit.normal, r.scene.sun.d);
-
-            //return Scale(Scale(hit.material.Ka, AmbientColor), hit.material.GetNoise());
-
-
-            Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
-            HitRecord reflectHit = r.scene.intersectScene(reflectRay);
-            return GetLightRays(reflectRay, reflectHit);
-
-            /*, hit.normal);
-            Ray reflectRay = new Ray(hit.pos, reflectDir);
-
-            HitRecord bounceHit = r.scene.intersectScene(reflectRay);
-            lightColor = GetLightRays(reflectRay, bounceHit);
-            lightPos = bounceHit.pos;*/
-        //}
+        return color;
     }
 
     public static Vector3d GetLightRays(Ray ray, HitRecord hit) {
@@ -172,7 +206,6 @@ public class ScatteringEquations {
                 InScatter(A, B, Kr, Wavelength.x, 4d, 0),
                 InScatter(A, B, Kr, Wavelength.y, 4d, 0),
                 InScatter(A, B, Kr, Wavelength.z, 4d, 0));//*/
-        //Vector3d RayleighColor = new Vector3d();
         Vector3d MieColor = new Vector3d(
                 InScatter(A, B, Km, Wavelength.x, 0.84d, Mie_G),
                 InScatter(A, B, Km, Wavelength.y, 0.84d, Mie_G),

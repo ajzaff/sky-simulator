@@ -15,6 +15,7 @@ import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
 public class Terrain extends Sphere {
     public Vector3d color;
 
+    /*
     public Vector3d calculateShading(Ray ray, HitRecord hit) {
 
         //return ScatteringEquations.GetLightBeforeHittingSurface(hit);//todo change this
@@ -39,6 +40,5 @@ public class Terrain extends Sphere {
             //return color;
             //return Add(GetLightRays(ray, hit), GetLightFromSuface(ray, hit));
         }
-
-    }
+    }//*/
 }

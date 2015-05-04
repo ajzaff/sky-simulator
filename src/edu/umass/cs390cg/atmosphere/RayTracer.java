@@ -4,7 +4,7 @@ import edu.umass.cs390cg.atmosphere.geom.HitRecord;
 import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.scene.Scene;
 import edu.umass.cs390cg.atmosphere.scene.SceneReader;
-
+import edu.umass.cs390cg.atmosphere.ScatteringEquations.*;
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 import java.net.SecureCacheResponse;
@@ -41,7 +41,7 @@ public class RayTracer {
     PixelThread.height = scene.height;
     PixelThread.camera = scene.camera;
     PixelThread.tracer = this;
-    PixelThread.samples = 2;
+    PixelThread.samples = 1;
     List<Thread> threads = new ArrayList<Thread>();
     double timeAtStart = System.nanoTime()/1e9d;
 
@@ -78,7 +78,8 @@ public class RayTracer {
     }//*/
     //endregion
 
-    System.out.println("Largest " + ScatteringEquations.LargestVal + " Smallest " + ScatteringEquations.SmallestVal);
+    if(ScatteringEquations.Debug)
+      System.out.println(ScatteringEquations.UpdateName + " was between " + ScatteringEquations.SmallestVal + " and " + ScatteringEquations.LargestVal);
 
     double timeAtEnd = System.nanoTime()/1e9d;
     System.out.println("Took " + (timeAtEnd-timeAtStart) + " seconds");
@@ -87,10 +88,11 @@ public class RayTracer {
     scene.writeImage();
   }
 
+  /*
   public Vector3d trace(Ray ray) {
     /*float d2 = -ray.d.dot(scene.sun.d);
     d2=(float)Math.pow(d2,14);
-    return new Color3f(d2,d2,d2);*/
+    return new Color3f(d2,d2,d2);
     HitRecord hit = scene.intersectScene(ray);
     if(hit == null) return new Vector3d();
     else if(hit.type == HitRecord.HitType.TYPE_SKY) {
@@ -102,7 +104,8 @@ public class RayTracer {
     else {
 
       return scene.terrain.calculateShading(ray, hit);
-
     }
-  }
+  }//*/
+
+
 }

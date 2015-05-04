@@ -11,6 +11,7 @@ import javax.vecmath.Vector3d;
 public class Sky extends Sphere {
     public Vector3d color;
 
+    /*
     public Vector3d calculateShading(Ray ray, HitRecord hit) {
 
         if (ScatteringEquations.Debug) {
@@ -24,6 +25,5 @@ public class Sky extends Sphere {
 
             return ScatteringEquations.GetLightRays(ray, hit);
         }
-
-    }
+    }//*/
 }
