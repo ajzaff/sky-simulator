@@ -26,9 +26,10 @@ sun.color  150 150 150
 # material
 material.name ground
 material.type specular
-material.ka 0.6 0.46 0.32
+material.ka .3 .7 .2
 material.kd 1.0 0.2 0.2
-material.ks 0.6 0.6 0.6
+# material.ks .1 .2 .1
 material.phong 20.0
+material.noise 0.5 1 0
 material.send
 

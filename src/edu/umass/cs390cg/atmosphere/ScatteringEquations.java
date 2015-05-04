@@ -6,6 +6,7 @@ import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 
+import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
@@ -16,9 +17,8 @@ import static java.lang.Math.*;
 
 public class ScatteringEquations {
 
-    //region Declarations
-
     public static boolean Debug = true;
+    //region Declarations
 
     public static int samplesPerInScatterRay = 10;
     public static int samplesPerOutScatterRay = 10;
@@ -88,6 +88,9 @@ public class ScatteringEquations {
     // These vectors must be normalized.
     public static Vector3d Shade(Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit) {
         Vector3d color = Scale(AmbientColor, hit.material.Ka);
+
+        color = Scale(color, hit.material.GetNoise());
+
         //return color;
 
         // Add spec light
@@ -119,6 +122,13 @@ public class ScatteringEquations {
         // If point is in sunlight, return Is * attenuation
         //else return ambient
 
+        Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
+        HitRecord reflectHit = r.scene.intersectScene(reflectRay);
+
+        return GetAllOutScatter(hit.pos, reflectHit.pos);
+
+        /*
+
         // The position of where the light originates from (on sky sphere, or another ground vertex)
         Vector3d lightPos;
 
@@ -138,23 +148,20 @@ public class ScatteringEquations {
         else { // If it's shadowed
             double cos = GetVectorCos(hit.normal, r.scene.sun.d);
 
-            return Scale(hit.material.Ka, AmbientColor);
-            /*
-            Vector3d reflectDir = Reflect(ray.d, hit.normal);
+            //return Scale(Scale(hit.material.Ka, AmbientColor), hit.material.GetNoise());
+
+
+            Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
+            HitRecord reflectHit = r.scene.intersectScene(reflectRay);
+            return GetLightRays(reflectRay, reflectHit);
+
+            /*, hit.normal);
             Ray reflectRay = new Ray(hit.pos, reflectDir);
 
             HitRecord bounceHit = r.scene.intersectScene(reflectRay);
             lightColor = GetLightRays(reflectRay, bounceHit);
             lightPos = bounceHit.pos;*/
-        }
-
-        //private Vector3d Shade(Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit) {
-        /*
-        Vector3d LightIntoSurface = Subtract(hit.pos, lightPos);
-        LightIntoSurface.normalize();
-        
-        return Shade(lightColor, LightIntoSurface, Negate(ray.d), hit);*/
-
+        //}
     }
 
     public static Vector3d GetLightRays(Ray ray, HitRecord hit) {

@@ -10,9 +10,6 @@ import javax.vecmath.Vector3d;
 
 public class Sky extends Sphere {
     public Vector3d color;
-    public static double lowestHeight = 10000d;
-
-    double LargestValue = -2000000d;
 
     public Vector3d calculateShading(Ray ray, HitRecord hit) {
 

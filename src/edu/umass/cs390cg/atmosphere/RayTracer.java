@@ -44,7 +44,7 @@ public class RayTracer {
     PixelThread.height = scene.height;
     PixelThread.camera = scene.camera;
     PixelThread.tracer = this;
-    PixelThread.samples = 1;
+    PixelThread.samples = 2;
     List<Thread> threads = new ArrayList<Thread>();
     double timeAtStart = System.nanoTime()/1e9d;
 
@@ -62,7 +62,9 @@ public class RayTracer {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-    }//*/
+    }
+
+    //*/
     //endregion
 
     //region Non threaded
@@ -101,24 +103,9 @@ public class RayTracer {
       return scene.sky.calculateShading(ray, hit);
     }
     else {
-      /*
-      //double depth = ScatteringEquations.GetLinearDepth(ray.o, hit.pos)
-      //return new Vector3d(depth, depth, depth);
+
       return scene.terrain.calculateShading(ray, hit);
-      //return scene.terrain.color;
-       */
 
-      Ray newRay = new Ray(hit.pos, scene.sun.d);
-      HitRecord newHit = scene.intersectScene(newRay);
-
-      if(newHit.type == HitRecord.HitType.TYPE_TERRAIN) {
-        return new Vector3d();
-      }
-
-      Random r = new Random();
-      double d = r.nextDouble() / 2 + .5;
-      Vector3d x = scene.terrain.color;
-      return new Vector3d(x.x*d,x.y*d,x.z*d);
     }
   }
 }

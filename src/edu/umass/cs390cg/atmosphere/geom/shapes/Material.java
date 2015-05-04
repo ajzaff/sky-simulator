@@ -4,6 +4,8 @@ package edu.umass.cs390cg.atmosphere.geom.shapes;// Material class
 
 import javax.vecmath.*;
 
+import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
+
 public class Material {
 
 	public Vector3d Ka;	// ambient reflectance
@@ -15,6 +17,17 @@ public class Material {
 	public double ior;			// index of refraction
 	public String Name;
 	public String Type;
+	public double lowNoise, highNoise;
+
+	// Returns the noise coefficient, or 1 if none
+	public double GetNoise(){
+		double noiseDiff = highNoise - lowNoise;
+		if(!isCloseEnough(noiseDiff, 0, 0.01)){
+			return Map(rand.nextDouble(), 0d, 1d, lowNoise, highNoise);
+		}
+		else
+			return 1d;
+	}
 	
 	public Material()
 	{
