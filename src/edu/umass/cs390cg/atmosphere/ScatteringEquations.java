@@ -11,6 +11,8 @@ import edu.umass.cs390cg.atmosphere.numerics.Integrals;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import java.security.KeyPair;
+
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
 
 import static edu.umass.cs390cg.atmosphere.numerics.Vec.*;
@@ -20,8 +22,8 @@ public class ScatteringEquations {
 
     //region Declarations
 
-    public static int samplesPerInScatterRay = 1000;
-    public static int samplesPerOutScatterRay = 1000;
+    public static int samplesPerInScatterRay = 10;
+    public static int samplesPerOutScatterRay = 10;
     public static Sky sky;
     public static Terrain terrain;
     public static double scale; // 1 / (Outer radius - inner radius)
@@ -32,9 +34,8 @@ public class ScatteringEquations {
     public static double Km = 0.0015d;
     public static double Kr4Pi = Kr * 4 * PI;
     public static double Km4pi = Km * 4 * PI;
-    public static double ESun = 150.d;
-    public static double KrESun = Kr*ESun;
-    public static double KmESun = Km*ESun;
+    public static double KrESun = 0.0000025d * 10;
+    public static double KmESun = 0.00015d * 10;
 
     public static final double Mie_G = -.8d;
     public static double KMie = 0.0015d;
@@ -44,7 +45,7 @@ public class ScatteringEquations {
             1d / Math.pow(Wavelength.y, 4),
             1d / Math.pow(Wavelength.z, 4));
 
-    public static void Initialize(Sky sky, Terrain terrain) {
+    public static void Initialize(Sky sky, Terrain terrain, ) {
         ScatteringEquations.sky = sky;
         ScatteringEquations.terrain = terrain;
         scale = 1d / (sky.radius - terrain.radius);
@@ -54,10 +55,11 @@ public class ScatteringEquations {
     //endregion
 
     //region NewCode
+    /*
     private static double scale(double Cos) {
         double x = 1f - Cos;
         return scaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
-    }
+    }*/
 
     public static Vector3d cosOfVectorsNormalized(Vector3d A, Vector3d B) {
         double value = (A.dot(B) / 2d) + 0.5d;
@@ -65,6 +67,7 @@ public class ScatteringEquations {
     }
 
 
+    /*
     public static Vector3d GetInScatter(final Ray ray, HitRecord hit) {
 
         double rayLength = Subtract(hit.pos, ray.o).length(); // good
@@ -79,6 +82,7 @@ public class ScatteringEquations {
         final double startAngle = ray.d.dot(startPoint) / cameraHeight; // good?
         final double startOffset = cameraDepth * scale(startAngle); // good
 
+        //for(int i =0; i < Samples)
 
         Vector3d myColor = Integrals.estimateIntegral(
                 new Function() {
@@ -97,10 +101,10 @@ public class ScatteringEquations {
 
                         Vector3d lightToAttenuate =
                                 Scale(
-                                    Add(
-                                        Scale(InvWavelength, Kr4Pi),
-                                        Km4pi),
-                                -forwardScatter);
+                                        Add(
+                                                Scale(InvWavelength, Kr4Pi),
+                                                Km4pi),
+                                        -forwardScatter);
 
                         Vector3d addedLight = new Vector3d(
                                 exp(lightToAttenuate.x),
@@ -113,13 +117,12 @@ public class ScatteringEquations {
         );
 
         double cos = r.scene.sun.d.dot(ray.d);
+        Vector3d RayleighCoefficient = Scale(InvWavelength, KrESun * RayleighPhaseFunction(cos));
+        double MieCoefficient = KmESun * MiePhaseFunction(cos, Mie_G);
 
-        System.out.println("cosine is " + cos);
-
-        Vector3d RayleighColor = Scale(Scale(Scale(myColor, InvWavelength), KrESun), RayleighPhaseFunction(startAngle));
-        Vector3d MieColor = Scale(Scale(myColor, KmESun), MiePhaseFunction(startAngle, Mie_G));
-        return Add(RayleighColor, MieColor);
+        return Add(Scale(myColor, RayleighCoefficient), Scale(myColor, MieCoefficient));
     }
+
 
     //region Phase (theta, g)
 
@@ -132,8 +135,8 @@ public class ScatteringEquations {
      *              and -.999 < g < -.75 results in Mie aerosol scattering
      * @return
      */
-    public static double RayleighPhaseFunction(double theta) {
-        return (3d / 4 * (1 + cos(theta)));
+    public static double RayleighPhaseFunction(double cos) {
+        return (3d / 4 * (1 + cos));
     }
 
     /**
@@ -147,29 +150,32 @@ public class ScatteringEquations {
      * @return
      */
     public static double MiePhaseFunction(double cos_theta, double g) {
-        double gg;
+        double gg = g * g;
 
-        gg = g * g;
         return (3 * (1 - gg)) / (2 * (2 + gg)) *
                 (1 + cos_theta * cos_theta) /
                 pow(1 + gg - 2 * g * cos_theta, 3d / 2);
     }
     //endregion
 
-    /*
+
     public static double OpticalDepth(Vector3d A, Vector3d B) {
-        return Integrals.estimateIntegral(
-                new Function() {
-                    @Override
-                    public double evaluate(Object[] args) {
-                        Vector3d v = (Vector3d) args[0];
-                        double sampleHeight = height(v);
-                        return exp(-sampleHeight * scaleOverScaleDepth);
-                    }
-                },
-                A, B, samplesPerOutScatterRay
-        );
-    }*/
+        Vector3d dir = Subtract(B, A);
+        double sampleLength = dir.length() / samplesPerOutScatterRay;
+        double scaledLength = sampleLength * scale;
+        dir.normalize();
+        dir.scale(sampleLength);
+
+        Vector3d samplePoint = Add(A, Scale(dir, 0.5d));
+
+        double value = 0d;
+        for (int n = 0; n < samplesPerOutScatterRay; n++) {
+            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint)));
+            value += density * scaledLength;
+            samplePoint = Add(samplePoint, dir);
+        }
+        return value;
+    }
 
 
     /**
@@ -189,6 +195,71 @@ public class ScatteringEquations {
         return height;
     }
 
-    //endregion
+    public static Vector3d GetLightRays(Ray ray, HitRecord hit){
+        Vector3d A = ray.o;
+        Vector3d B = hit.pos;
 
+        Vector3d RayleighColor = new Vector3d(
+                InScatter(A, B, Kr, Wavelength.x, 4, 0),
+                InScatter(A, B, Kr, Wavelength.y, 4, 0),
+                InScatter(A, B, Kr, Wavelength.z, 4, 0));
+        Vector3d MieColor = new Vector3d(
+                InScatter(A, B, Km, Wavelength.x, 0.84d, 0),
+                InScatter(A, B, Km, Wavelength.y, 0.84d, 0),
+                InScatter(A, B, Km, Wavelength.z, 0.84d, 0));
+        return Add(RayleighColor, MieColor);
+    }
+
+    private static double InScatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower, double G) {
+        Vector3d dir = Subtract(B, A);
+        double sampleLength = dir.length() / samplesPerInScatterRay;
+        double scaledLength = sampleLength * scale;
+        dir.normalize();
+        dir.scale(sampleLength);
+
+        Vector3d samplePoint = Add(A, Scale(dir, 0.5d));
+
+        double InscatterIntegral = 0d;
+        for (int n = 0; n < samplesPerOutScatterRay; n++) {
+
+            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint)));
+            Vector3d Pc = new Vector3d();
+            double outscatter = exp(
+                    -1d * GetOutscatter(samplePoint, Pc, KConstant, wavelength, KPower) -
+                            GetOutscatter(samplePoint, A, KConstant, wavelength, KPower));
+
+            InscatterIntegral += density * outscatter * scaledLength;
+            samplePoint = Add(samplePoint, dir);
+        }
+
+
+        // cos = lightDir dot ldir
+        Vector3d ScatterRayTowardsCamera = Subtract(A, B);
+        double cos = ScatterRayTowardsCamera.dot(r.scene.sun.d) / ScatterRayTowardsCamera.length();
+        System.out.println("Cosine of angle is " + cos);
+
+        double Coefficients = GetK(wavelength, KPower) * Phase(cos, G);
+        return InscatterIntegral * Coefficients;
+    }
+
+
+
+    private static double Phase(double cos, double g){
+        double gg = g * g;
+
+        return (3 * (1 - gg)) /
+                (2 * (2 + gg)) *
+
+                (1 + cos * cos) /
+                pow(1 + gg - 2 * g * cos, 3d / 2);
+    }
+
+    private static double GetK(double KCOnstant, double wavelength, double KPower){
+        return KCOnstant / (pow(wavelength, KPower));
+    }
+
+
+    private static double GetOutscatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower) {
+        return 4 * PI  *GetK(KConstant, wavelength, KPower) * OpticalDepth(A, B);
+    }
 }
