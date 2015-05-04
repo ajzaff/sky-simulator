@@ -9,6 +9,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class RayTracer {
 
@@ -93,8 +94,18 @@ public class RayTracer {
       return scene.sky.calculateShading(ray, hit);
     }
     else {
-      //return new Color3f();
-      return scene.terrain.color;
+
+      Ray newRay = new Ray(hit.pos, scene.sun.d);
+      HitRecord newHit = scene.intersectScene(newRay);
+
+      if(newHit.type == HitRecord.HitType.TYPE_TERRAIN) {
+        return new Vector3d();
+      }
+
+      Random r = new Random();
+      double d = r.nextDouble() / 2 + .5;
+      Vector3d x = scene.terrain.color;
+      return new Vector3d(x.x*d,x.y*d,x.z*d);
     }
   }
 }

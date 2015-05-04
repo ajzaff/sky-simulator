@@ -132,7 +132,7 @@ public class ScatteringEquations {
         double height = pos.length();
         if (height < terrain.radius || height > sky.radius + 0.1) {
 
-            System.out.println("Height is actually " + height + " at " + pos);
+            //System.out.println("Height is actually " + height + " at " + pos);
         }
         return height;
     }
@@ -155,7 +155,7 @@ public class ScatteringEquations {
     }
 
 
-    private static double GetOutscatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower) {
+    public static double GetOutscatter(Vector3d A, Vector3d B, double KConstant, double wavelength, double KPower) {
         return 4 * PI  *GetK(KConstant, wavelength, KPower) * OpticalDepth(A, B);
     }
 

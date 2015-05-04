@@ -15,7 +15,7 @@ sky.center  0 0 0
 sky.radius  205
 
 # terrain features
-terrain.color 1 0 0
+terrain.color .3 .7 .2
 terrain.center  0 0 0
 terrain.radius  200
 
