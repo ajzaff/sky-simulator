@@ -20,23 +20,23 @@ public final class Integrals {
             Function function,
             Vector3d A,
             Vector3d B,
-            double scaledLength,
+            double scale,
             int n) {
         Vector3d dir;
         Object[] args;
-        double t, u;
+        double t, segmentLength;
         Vector3d result = new Vector3d();
 
         dir = new Vector3d(B);
         dir.sub(A);
         Ray ray = new Ray(A, dir);
-        u = dir.length() / n;
+        segmentLength = dir.length() / n;
 
-        for (t = 0; t <= 1; t += u) {
-            args = new Object[]{ray.pointAt(t + u / 2)};
-            result =  Vec.Add(
-                    Vec.Scale(function.evaluate(args), u),
-                    result);
+        for (t = 0; t <= 1; t += segmentLength) {
+            args = new Object[]{ray.pointAt(t + segmentLength / 2)};
+            result = Vec.Add(
+                        Vec.Scale(function.evaluate(args), segmentLength * scale),
+                        result);
         }
 
         return result;

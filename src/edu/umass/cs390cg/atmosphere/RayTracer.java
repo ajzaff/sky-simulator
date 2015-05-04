@@ -40,10 +40,11 @@ public class RayTracer {
     PixelThread.tracer = this;
     PixelThread.samples = 1;
     List<Thread> threads = new ArrayList<Thread>();
-    float timeAtStart = System.currentTimeMillis();
+    double timeAtStart = System.nanoTime()/1e9d;
 
     //region Threaded
-    /*for(int y = 0; y < scene.height; y++){
+
+    for(int y = 0; y < scene.height; y++){
       Thread newThread = new Thread(new PixelThread(y));
       newThread.start();
       threads.add(newThread);
@@ -59,10 +60,12 @@ public class RayTracer {
     //endregion
 
     //region Non threaded
+
+  /*
     float x, y;
     for (j = 0; j < scene.height; j++) {
       y = (float) j / (float) scene.height;
-      System.out.print("\rray tracing... " + j * 100 / scene.height + "%");
+      //System.out.print("\rray tracing... " + j * 100 / scene.height + "%");
       for (i = 0; i < scene.width; i++) {
         x = (float) i / (float) scene.width;
         scene.image[i][j] = trace(scene.camera.getCameraRay(x, y));
@@ -71,8 +74,8 @@ public class RayTracer {
     //endregion
 
 
-    float timeAtEnd = System.currentTimeMillis();
-    System.out.println("Took " + (timeAtEnd-timeAtStart) + " milliseconds");
+    double timeAtEnd = System.nanoTime()/1e9d;
+    System.out.println("Took " + (timeAtEnd-timeAtStart) + " seconds");
 
     System.out.println("\rray tracing completed.");
     scene.writeImage();
@@ -85,7 +88,9 @@ public class RayTracer {
     HitRecord hit = scene.intersectScene(ray);
     if(hit == null) return new Vector3d();
     else if(hit.type == HitRecord.HitType.TYPE_SKY) {
-      return scene.sky.calculateShading(ray, hit);
+
+      return ScatteringEquations.cosOfVectorsNormalized(ray.d, scene.sun.d);
+      //return scene.sky.calculateShading(ray, hit);
     }
     else {
       //return new Color3f();
