@@ -2,10 +2,13 @@ package edu.umass.cs390cg.atmosphere.numerics;
 
 import javax.vecmath.Vector3d;
 
+import java.util.Random;
+
 import static java.lang.Math.exp;
 
 public class Vec {
 
+    public static Random rand = new Random();
     //region Basic Operators
     public static Vector3d Scale(Vector3d a, double scale) {
         return new Vector3d(
@@ -71,6 +74,13 @@ public class Vec {
 	 * if your ray direction is point INTO the hit point, you should flip
 	 * the sign of the direction before calling reflect
 	 */
+
+    /**
+     * Reflects a ray going In to going OUT
+     * @param dir Normalized vector going towards a surface
+     * @param normal Normalized normal going away from surface
+     * @return A reflected vector going away from surface
+     */
     public static Vector3d Reflect(Vector3d dir, Vector3d normal)
     {
         Vector3d newDir = Negate(dir);

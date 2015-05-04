@@ -123,13 +123,19 @@ public class SceneParser {
       offset += PROPERTY_MATERIAL_PHONG.length();
       mat.phong_exp = consumeDouble(line);
     }
+    else if(line.startsWith(PROPERTY_MATERIAL_NOISE)) {
+      offset += PROPERTY_MATERIAL_NOISE.length();
+      Vector3d noiseVec = consumeVector(line);
+      mat.lowNoise = noiseVec.x;
+      mat.highNoise = noiseVec.y;
+    }
     else if(line.startsWith(PROPERTY_MATERIAL_SEND)) {
       SendMaterial();
     }
   }
 
   public void SendMaterial(){
-    //if(mat.Name == "ground") // Todo why didn't this compare work?
+    if(mat.Name.equals("ground"))
       scene.terrain.material = mat;
     mat = new Material();
 

@@ -23,7 +23,9 @@ public final class SceneProperties {
   public static final String PROPERTY_MATERIAL_KD = "material.kd";
   public static final String PROPERTY_MATERIAL_KS = "material.ks";
   public static final String PROPERTY_MATERIAL_PHONG = "material.phong";
+  public static final String PROPERTY_MATERIAL_NOISE = "material.noise";
   public static final String PROPERTY_MATERIAL_SEND = "material.send";
+
 
 
 }
