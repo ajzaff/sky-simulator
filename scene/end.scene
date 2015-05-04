@@ -20,7 +20,7 @@ terrain.center  0 0 0
 terrain.radius  200
 
 # sun features
-sun.direction 1 0 1
+sun.direction 1 -1 1
 sun.color  150 150 150
 
 # material

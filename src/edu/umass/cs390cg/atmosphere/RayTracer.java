@@ -14,15 +14,18 @@ import java.util.Random;
 
 public class RayTracer {
 
-  public static final RayTracer r = new RayTracer();
-
+  public static RayTracer r;
   public Scene scene;
+
+  public RayTracer(String file) {
+    if(r == null)
+      r = this;
+    scene = new SceneReader(file).readScene();
+  }
 
   public static void main(String[] args) {
     if (args.length == 1) {
-      r.scene = new SceneReader(args[0]).readScene();
-
-      r.startTracing();
+      (r = new RayTracer(args[0])).startTracing();
     } else {
       System.out.println("Usage: java RayTracer input.scene");
     }
