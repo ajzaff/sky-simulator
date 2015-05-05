@@ -20,7 +20,7 @@ public class ScatteringEquations {
     //public static boolean Debug = true;
     public static boolean Debug = false;
     public static int MaxDepth = 4;
-    public static float lscale = 0f;
+    public static double lscale = 1;
 
     public static int samplesPerInScatterRay = 10;
     public static int samplesPerOutScatterRay = 10;
@@ -30,11 +30,11 @@ public class ScatteringEquations {
     public static double scaleDepth = 0.25d; // Depth of average atmospheric density, 0.25
     public static double scaleOverScaleDepth;
 
-    public static double exposure = 2d;
+    public static double exposure = 1.7;
     public static double Kr = 0.0025d;
     public static double Km = 0.0015d;
-    public static final double Mie_G = -.8d;
-    public static Vector3d Wavelength = new Vector3d(0.650d, 0.570d, 0.475d);
+    public static final double Mie_G = -.8d;//0.650d, 0.570d, 0.475d);
+    public static Vector3d Wavelength = new Vector3d(0.63d, 0.5d, 0.475d);
     public static Vector3d AmbientColor = new Vector3d(0.1d, 0.1d, 0.1d);
     public static String UpdateName = "Depth";
     public static double LargestVal = Double.MIN_VALUE;

@@ -4,7 +4,7 @@ scene.height    768
 scene.output    test.png
 
 # camera location
-camera.gaze  1 -1 1
+camera.gaze 1 0 1
 camera.up   0 1 0
 camera.eye  0 200.1 0
 camera.fov  140
@@ -20,8 +20,8 @@ terrain.center  0 0 0
 terrain.radius  200
 
 # sun features
-sun.direction 1 0 1
-sun.color  150 150 150
+sun.direction -1 -.15 -1
+sun.color  170 140 260
 
 # material
 material.name ground
