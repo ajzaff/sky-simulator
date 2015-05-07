@@ -1,6 +1,6 @@
 # scene metadata
-scene.width 1024
-scene.height    768
+scene.width 1920
+scene.height    1080
 scene.output    test.png
 
 # camera location

@@ -47,10 +47,10 @@ public class ScatteringEquations {
     public static Vector3d AmbientColor = new Vector3d(0.1d, 0.1d, 0.1d);
 
     public static int samplesPerInScatterRay = 10;
-    public static int samplesPerOutScatterRay = 10;
+    public static int samplesPerOutScatterRay = 50;
 
     //How many antialiasing samples are taken
-    public static int AAsamples = 1;
+    public static int AAsamples = 3;
     public static double exposure = 2;
 
     public static String UpdateName = "Depth";
