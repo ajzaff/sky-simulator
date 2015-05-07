@@ -6,7 +6,6 @@ import edu.umass.cs390cg.atmosphere.geom.Ray;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Sky;
 import edu.umass.cs390cg.atmosphere.geom.shapes.Terrain;
 
-import javax.vecmath.Tuple3d;
 import javax.vecmath.Vector3d;
 
 import static edu.umass.cs390cg.atmosphere.RayTracer.*;
@@ -16,30 +15,50 @@ import static java.lang.Math.*;
 
 public class ScatteringEquations {
 
-    //region sdf
-    //public static boolean Debug = true;
-    public static boolean Debug = false;
-    public static int MaxDepth = 4;
-    public static double lscale = 1;
-
-    public static int samplesPerInScatterRay = 10;
-    public static int samplesPerOutScatterRay = 10;
+    //region Declarations
     public static Sky sky;
     public static Terrain terrain;
     public static double scale; // 1 / (Outer radius - inner radius)
     public static double scaleDepth = 0.25d; // Depth of average atmospheric density, 0.25
     public static double scaleOverScaleDepth;
 
-    public static double exposure = 1.7;
+    public static boolean Debug = false;
+    // If false displa
+    private static boolean RenderSimpleSky = false;
+    // If false does not account for light reflected off ground
+    private static boolean RenderGroundLight = true;
+    // Renders shadow ground as dark red/brown
+    private static boolean RenderSimpleShadowedGround = false;
+    // Renders lit ground as green
+    private static boolean RenderSimpleLitGround = false;
+
+    // The this scales the atmospheric light when looking at the ground
+    // When set to zero only the reflected ground light is shown.
+    // If set very high the ground is drowned
+    public static double lscale = 1;
+
+    // How many times the ray trace can bounce
+    public static int MaxDepth = 4;
+
     public static double Kr = 0.0025d;
     public static double Km = 0.0015d;
     public static final double Mie_G = -.8d;//0.650d, 0.570d, 0.475d);
-    public static Vector3d Wavelength = new Vector3d(0.63d, 0.5d, 0.475d);
+    public static Vector3d Wavelength = new Vector3d(0.650d, 0.570d, 0.475d);
     public static Vector3d AmbientColor = new Vector3d(0.1d, 0.1d, 0.1d);
+
+    public static int samplesPerInScatterRay = 10;
+    public static int samplesPerOutScatterRay = 10;
+
+    //How many antialiasing samples are taken
+    public static int AAsamples = 1;
+    public static double exposure = 2;
+
     public static String UpdateName = "Depth";
     public static double LargestVal = Double.MIN_VALUE;
     public static double SmallestVal = Double.MAX_VALUE;
 
+    // This is used to find the min and max values for a value, used to normalize it on screen
+    // For instance, if tracing optical depth this can normalize it between 0-1
     public static void Update(double val) {
         if (val > LargestVal) {
             LargestVal = val;
@@ -51,21 +70,11 @@ public class ScatteringEquations {
         }
     }
 
-
     public static void Initialize(Sky sky, Terrain terrain) {
         ScatteringEquations.sky = sky;
         ScatteringEquations.terrain = terrain;
         scale = 1d / (sky.radius - terrain.radius);
         scaleOverScaleDepth = scale / scaleDepth;
-
-        //Vector3d Vec1 = new Vector3d(1, 0, 0);
-        //Vector3d Vec2 = new Vector3d(-1, 0, 0);
-        /*
-        for(double cos = -1d; cos <= 1; cos += 0.1d)
-            System.out.println("Cos " + cos + " -> " + Phase(cos, Mie_G));*///debugger
-
-        //System.out.println("Cosin " + GetVectorCos(Vec1, Vec2));
-        // System.out.println("Phase 1" + Phase(1, 0));
     }
 
     //endregion
@@ -85,22 +94,26 @@ public class ScatteringEquations {
             //return new Vector3d(1,0,0);
             //double asdf = ScatteringEquations.OpticalDepth(ray.o, hit.pos);
             //return ColorNormalize(new Vector3d(depth, depth, depth), 0, 7);
-            return ScatteringEquations.GetLightRays(ray, hit);
+
+            if(!RenderSimpleSky)
+                return ScatteringEquations.GetLightRays(ray, hit);
+            else
+                return new Vector3d(0,0,1);
         } else {
             //TODO potentially add more hit types
             // Iv + Ie*out
-            //return new Vector3d(0,1,0);
-            //return GetEmittedLight(ray, hit, depth);
-
-            //return ScatteringEquations.GetLightRays(ray, hit);
-            //return GetLightFromSurface(ray, hit, depth);
 
             Vector3d lightScale = new Vector3d(lscale, lscale, lscale);
+            Vector3d atmosLight = new Vector3d();
+            if(lscale != 0)
+                atmosLight = Scale(ScatteringEquations.GetLightRays(ray, hit), lightScale);
 
-            Vector3d atmosLight = Scale(ScatteringEquations.GetLightRays(ray, hit), lightScale);
-            return Add(atmosLight,
-                    GetLightFromSurface(ray, hit, depth));//*/
-            //return GetEmittedLight(ray, hit, depth);
+            if(RenderGroundLight){
+                return Add(atmosLight,
+                        GetLightFromSurface(ray, hit, depth));
+            }
+            else
+                return atmosLight;
         }
     }
 
@@ -123,46 +136,41 @@ public class ScatteringEquations {
         // If point is in sunlight, return Is * attenuation
         //else return ambient
 
-        /*
+        Ray RayToSun = new Ray(hit.pos, r.scene.sun.d);
+        HitRecord SunHit = r.scene.intersectScene(RayToSun);
+        Vector3d SunPoint = SunHit.pos;
 
-        Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
-        HitRecord reflectHit = r.scene.intersectScene(reflectRay);
-
-        //Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit)
-
-        return Shade(GetRayColor(reflectRay, depth + 1), Negate(reflectRay.d), Negate(ray.d), hit);
-        //TODO change back light bouncing
-        */
-
-
-        HitRecord RayToSun = r.scene.intersectScene(new Ray(hit.pos, r.scene.sun.d));
-        Vector3d SunPoint = RayToSun.pos;
-        Vector3d outscatterCoefficient = VecExponent(Scale(GetAllOutScatter(hit.pos, SunPoint), -1));
-        Vector3d lightFromSun = Scale(r.scene.sun.color, outscatterCoefficient);
-        double cos = GetVectorCos(r.scene.sun.d, hit.normal);
+        Vector3d lightFromSun = new Vector3d();
+        if(!(RenderSimpleLitGround && RenderSimpleShadowedGround)){
+            lightFromSun = GetLightRays(RayToSun, SunHit);
+            lightFromSun = r.scene.sun.color;
+        }
 
         // Reflect attenuated sunlight, Is * outscatter
-        if (RayToSun.type == HitRecord.HitType.TYPE_SKY) {
+        if (SunHit.type == HitRecord.HitType.TYPE_SKY) {
             // exp( -t(sun, ground))
             // Isun * outScattering
-            //return lightFromSun;
 
-            //Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
-            //return GetRayColor(reflectRay, depth + 1);
-
-            //return new Vector3d(0,1,0);
-            return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);//*/
+            if(!RenderSimpleLitGround){
+                Vector3d outscatterCoefficient = VecExponent(Scale(GetAllOutScatter(hit.pos, SunPoint), -1));
+                lightFromSun = Scale(lightFromSun, outscatterCoefficient);
+                return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);
+            }
+            else
+                return new Vector3d(0,4,0);
         }
         // Else reflect the ray off the material and return atmospheric scattering
         else { // If it's shadowed
-            //return Scale(Scale(hit.material.Ka, AmbientColor), hit.material.GetNoise());
-            //Ray reflectRay = new Ray(hit.pos, Reflect(ray.d, hit.normal));
-            //return GetRayColor(reflectRay, depth + 1);
-            //return Shade(GetRayColor(reflectRay, depth + 1), Negate(reflectRay.d), Negate(ray.d), hit);
 
-            //return new Vector3d(0,0,0);
-            lightFromSun = Scale(lightFromSun, cos);
-            return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);
+            if(!RenderSimpleShadowedGround){
+                Vector3d outscatterCoefficient = VecExponent(Scale(GetAllOutScatter(hit.pos, SunPoint), -1));
+                lightFromSun = Scale(lightFromSun, outscatterCoefficient);
+                double cos = GetVectorCos(r.scene.sun.d, hit.normal);
+                lightFromSun = Scale(lightFromSun, cos);
+                return Shade(lightFromSun, Negate(r.scene.sun.d), Negate(ray.d), hit);
+            }
+            else
+                return new Vector3d(0.16, 0.04, 0.04);
         }
     }
 
@@ -203,11 +211,18 @@ public class ScatteringEquations {
         Vector3d A = ray.o;
         Vector3d B = hit.pos;
 
+        if(hit == null)
+            System.out.println("GetLightRays hit is null");
+
+        if(A == null)
+            System.out.println("GetLightRays A is null");
+        if(A == null)
+            System.out.println("GetLightRays B is null");
+
         Vector3d RayleighColor = new Vector3d(
                 InScatter(A, B, Kr, Wavelength.x, 4d, 0),
                 InScatter(A, B, Kr, Wavelength.y, 4d, 0),
-                InScatter(A, B, Kr, Wavelength.z, 4d, 0));//*/
-        //Vector3d RayleighColor = new Vector3d();
+                InScatter(A, B, Kr, Wavelength.z, 4d, 0));
         Vector3d MieColor = new Vector3d(
                 InScatter(A, B, Km, Wavelength.x, 0.84d, Mie_G),
                 InScatter(A, B, Km, Wavelength.y, 0.84d, Mie_G),
@@ -231,9 +246,13 @@ public class ScatteringEquations {
         double InscatterIntegral = 0d;
         for (int n = 0; n < samplesPerOutScatterRay; n++) {
 
-            double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint, true, "InScatter")));
+            double pointHeight = height(samplePoint, false, "InScatter");
+            if(pointHeight >= sky.radius || pointHeight <= terrain.radius)
+                continue;
 
-            Vector3d PointToSun = r.scene.intersectSky(new Ray(samplePoint, r.scene.sun.d)).pos;
+            double density = exp(scaleOverScaleDepth * (terrain.radius - pointHeight));
+            HitRecord SunHit = r.scene.intersectSky(new Ray(samplePoint, r.scene.sun.d));
+            Vector3d PointToSun = SunHit.pos;
 
             double outscatter = exp(
                     -1d * GetOutscatter(samplePoint, PointToSun, KConstant, wavelength, KPower) -
@@ -305,6 +324,8 @@ public class ScatteringEquations {
 
         double value = 0d;
         for (int n = 0; n < samplesPerOutScatterRay; n++) {
+
+            //todo this still generates points inside the earth. Is this a problem?
             double density = exp(scaleOverScaleDepth * (terrain.radius - height(samplePoint, false, "Optical Depth")));
             value += density * scaledLength;
             samplePoint = Add(samplePoint, dir);
@@ -325,7 +346,7 @@ public class ScatteringEquations {
         if (height < terrain.radius - 0.8 || height > sky.radius + 0.1) {
 
             if (checked)
-                System.out.println("From " + from + " height is" + height + " at " + pos);
+                System.out.println("From " + from + " height is " + height + " at " + pos);
         }
         return height;
     }
@@ -362,135 +383,4 @@ public class ScatteringEquations {
 
     //endregion
 
-    //region OldCode
-    /*
-
-        // Shades a point given the ray. Uses spec, diffuse, ambient, reflection and refraction sources
-    // These vectors must be normalized.
-    public static Vector3d Shade(Vector3d lightIntensity, Vector3d LightToSurface, Vector3d SurfaceToEye, HitRecord hit) {
-        Vector3d color = Scale(AmbientColor, hit.material.Ka);
-        //return color;
-
-        // Add spec light
-        if (VectorIsNonZero(hit.material.Ks)) {
-            // Points towards the viewing source
-
-            // Reflect expects dir to point to the source, reflects away
-            Vector3d R = Reflect(LightToSurface, hit.normal);
-            // BSpec = Intens * Ks ( max(O, R * V))^P
-            double specAmt = Math.max(0, SurfaceToEye.dot(R));
-            if (hit.material.phong_exp != 1) {
-                specAmt = Math.pow(specAmt, hit.material.phong_exp);
-            }
-            if (specAmt != 0) {
-                color = Add(color, Scale(Scale(lightIntensity, hit.material.Ks), specAmt));
-            }
-        }
-        // Add diffuse light, if available
-        if (VectorIsNonZero(hit.material.Kd)){
-            // BDiff = Intens * Kd * max(N * L, 0)
-
-            double diffuseAmt = Math.max(0, hit.normal.dot(Negate(LightToSurface)));
-            color = Add(color, Scale(Scale(lightIntensity, hit.material.Kd), diffuseAmt));
-        }
-        return color;//
-}
-    private static double scale(double Cos) {
-        double x = 1f - Cos;
-        return scaleDepth * exp(-0.00287 + x * (0.459 + x * (3.83 + x * (-6.80 + x * 5.25))));
-    }*/
-
-
-
-    /*
-    public static Vector3d GetInScatter(final Ray ray, HitRecord hit) {
-
-        double rayLength = Subtract(hit.pos, ray.o).length(); // good
-        double sampleLength = rayLength / samplesPerInScatterRay; // good
-
-        Vector3d startPoint = ray.o; // good
-        Vector3d endPoint = hit.pos; // good
-
-        double cameraHeight = height(startPoint); // good
-        final double cameraDepth = exp(scaleOverScaleDepth * (terrain.radius - cameraHeight));//good
-
-        final double startAngle = ray.d.dot(startPoint) / cameraHeight; // good?
-        final double startOffset = cameraDepth * scale(startAngle); // good
-
-        //for(int i =0; i < Samples)
-
-        Vector3d myColor = Integrals.estimateIntegral(
-                new Function() {
-                    @Override
-                    public Vector3d evaluate(Object[] args) {
-
-                        Vector3d samplePoint = (Vector3d) args[0];
-                        double sampleHeight = height(samplePoint);
-                        double sampleDepth = exp(scaleOverScaleDepth * (terrain.radius - sampleHeight));
-                        double lightAngle = samplePoint.dot(r.scene.sun.d) / sampleHeight;
-                        double cameraAngle = samplePoint.dot(ray.d) / sampleHeight;
-
-                        double forwardScatter = (startOffset +
-                                sampleDepth * (scale(lightAngle) - scale(cameraAngle)));
-
-
-                        Vector3d lightToAttenuate =
-                                Scale(
-                                        Add(
-                                                Scale(InvWavelength, Kr4Pi),
-                                                Km4pi),
-                                        -forwardScatter);
-
-                        Vector3d addedLight = new Vector3d(
-                                exp(lightToAttenuate.x),
-                                exp(lightToAttenuate.y),
-                                exp(lightToAttenuate.z));
-                        return Scale(addedLight, sampleDepth);
-                    }
-                },
-                startPoint, endPoint, scale, samplesPerOutScatterRay
-        );
-
-        double cos = r.scene.sun.d.dot(ray.d);
-        Vector3d RayleighCoefficient = Scale(InvWavelength, KrESun * RayleighPhaseFunction(cos));
-        double MieCoefficient = KmESun * MiePhaseFunction(cos, Mie_G);
-
-        return Add(Scale(myColor, RayleighCoefficient), Scale(myColor, MieCoefficient));
-    }
-
-
-    //region Phase (theta, g)
-
-    /**
-     * This calculates how much light is scattered in the
-     * direction of the camera
-     *
-     * @param theta is the angle between two rays
-     *              where g=0 results in symmetrical Rayleigh scattering
-     *              and -.999 < g < -.75 results in Mie aerosol scattering
-     * @return
-     *//*
-    public static double RayleighPhaseFunction(double cos) {
-        return (3d / 4 * (1 + cos));
-    }//*/
-
-    /**
-     * This calculates how much light is scattered in the
-     * direction of the camera
-     *
-     * @param cos_theta is the angle between two rays
-     * @param g         affects the symmetry of scattering
-     *                  where g=0 results in symmetrical Rayleigh scattering
-     *                  and -.999 < g < -.75 results in Mie aerosol scattering
-     * @return
-     *//*
-    public static double MiePhaseFunction(double cos_theta, double g) {
-        double gg = g * g;
-
-        return (3 * (1 - gg)) / (2 * (2 + gg)) *
-                (1 + cos_theta * cos_theta) /
-                pow(1 + gg - 2 * g * cos_theta, 3d / 2);
-    }*/
-
-    //endregion
 }

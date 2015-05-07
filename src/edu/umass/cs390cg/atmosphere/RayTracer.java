@@ -44,8 +44,7 @@ public class RayTracer {
     PixelThread.height = scene.height;
     PixelThread.camera = scene.camera;
     PixelThread.tracer = this;
-    PixelThread.samples = 1;
-    List<Thread> threads = new ArrayList<Thread>();
+    List<Thread> threads = new ArrayList<>();
     double timeAtStart = System.nanoTime()/1e9d;
 
     //region Threaded

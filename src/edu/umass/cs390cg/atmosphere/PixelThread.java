@@ -7,6 +7,7 @@ import edu.umass.cs390cg.atmosphere.numerics.Vec;
 import javax.vecmath.Vector3d;
 import java.util.Random;
 
+import static edu.umass.cs390cg.atmosphere.ScatteringEquations.AAsamples;
 import static edu.umass.cs390cg.atmosphere.ScatteringEquations.GetRayColor;
 
 public class PixelThread implements Runnable{
@@ -14,7 +15,6 @@ public class PixelThread implements Runnable{
 	static int width, height;
 	static Camera camera;
 	static RayTracer tracer;
-	static int samples = 1;
 	private int y;
 	
 	public PixelThread(int y){
@@ -37,14 +37,14 @@ public class PixelThread implements Runnable{
 			
 			// Make samples and average the color
 			Vector3d pixelColor = new Vector3d();
-			for(int s = 0; s < samples;s++){
+			for(int s = 0; s < AAsamples;s++){
 				double xJitter = Vec.rand.nextDouble()*xJitRange;
 				double yJitter = Vec.rand.nextDouble()*yJitRange;
 				Vector3d color = GetRayColor(camera.getCameraRay(xAmt + xJitter, yAmt + yJitter), 1);
 				pixelColor.add(color);
 			}
 
-			dest[x][y] = Vec.Scale(pixelColor, (1d/samples));
+			dest[x][y] = Vec.Scale(pixelColor, (1d/AAsamples));
 		}
 	}
 
