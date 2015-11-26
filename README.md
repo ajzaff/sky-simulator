@@ -1,6 +1,8 @@
 # sky-simulator
 A simulation of atmospheric lighting effects.
 
+![sky picture](https://raw.githubusercontent.com/spacenut/sky-simulator/RealisticScatter/ExamplePictures/HighAccuracy.png)
+
 Getting materials and scattering to work.
 Getting planet to blend between sun facing and not
 
